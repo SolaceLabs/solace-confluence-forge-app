@@ -1,0 +1,55 @@
+modules:
+  confluence:globalPage:
+    - key: solace-ep-token
+      resource: ep-token
+      resolver:
+        function: ep-token
+      title: Solace REST API Token Manager
+      route: ep-token
+  macro:
+    - key: solace-ep-macro
+      resource: ep-macro
+      resolver:
+        function: ep-macro
+      title: Solace
+      config:
+        function: ep-macro-config
+  function:
+    - key: ep-token
+      handler: index.handler
+    - key: ep-macro
+      handler: index.handler
+    - key: ep-macro-config
+      handler: index.config
+resources:
+  - key: ep-token
+    path: static/ep-token/build
+    tunnel:
+      port: 3000
+  - key: ep-macro
+    path: static/ep-macro/build
+    tunnel:
+      port: 3001
+permissions:
+  scopes:
+    - read:confluence-user
+    - read:user.property:confluence
+    - write:user.property:confluence
+    - write:confluence-content
+  content:
+    styles:
+      - 'unsafe-inline'
+    scripts:
+      - 'unsafe-eval'
+  external:
+    fetch:
+      client:
+        - https://api.solace.cloud
+        - "*.localhost"
+        - "*"
+      backend:
+        - https://api.solace.cloud
+        - "*.localhost"
+        - "*"
+app:
+  id: ari:cloud:ecosystem::app/c79b6e99-d250-4a54-9901-04a41b84a372
