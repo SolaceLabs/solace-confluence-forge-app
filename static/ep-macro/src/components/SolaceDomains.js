@@ -26,19 +26,19 @@ const Domain = (props) => {
   if (domain.hasOwnProperty('uniqueTopicAddressEnforcementEnabled')) rows.push({name: 'Unique Topic Enforcement Enabled', value: domain.uniqueTopicAddressEnforcementEnabled ? 'True' : 'False', type: 'String'});
   if (domain.hasOwnProperty('topicDomainEnforcementEnabled')) rows.push({name: 'Topic Domain Enforcement Enabled', value: domain.topicDomainEnforcementEnabled ? 'True' : 'False', type: 'String'});
   if (domain.hasOwnProperty('type')) rows.push({name: 'Type', value: domain.type, type: 'String'});
-  
+
   if (domain.hasOwnProperty('applicationCount') && domain.applicationCount > 0) 
-    rows.push({name: 'Application Count', value: domain.applicationCount, type: 'String', url: domain.applicationCountUrl});
+    rows.push({name: 'Number of Applications', value: '<i>(' + domain.applicationCount + ') found</i>', type: 'String', url: domain.applicationCountUrl});
   if (domain.hasOwnProperty('eventCount') && domain.eventCount > 0) 
-    rows.push({name: 'Event Count', value: domain.eventCount, type: 'String', url: domain.eventCountUrl});
+    rows.push({name: 'Number of Events', value: '<i>(' + domain.eventCount + ') found</i>', type: 'String', url: domain.eventCountUrl});
   if (domain.hasOwnProperty('schemaCount') && domain.schemaCount > 0) 
-    rows.push({name: 'Schema Count', value: domain.schemaCount, type: 'String', url: domain.schemaCountUrl});
+    rows.push({name: 'Number of Schemas', value: '<i>(' + domain.schemaCount + ') found</i>', type: 'String', url: domain.schemaCountUrl});
   if (domain.hasOwnProperty('enumCount') && domain.enumCount > 0) 
-    rows.push({name: 'Enum Count', value: domain.enumCount, type: 'String', url: domain.enumCountUrl});
+    rows.push({name: 'Number of Enums', value: '<i>(' + domain.enumCount + ') found</i>', type: 'String', url: domain.enumCountUrl});
   if (domain.hasOwnProperty('eventApiCount') && domain.eventApiCount > 0) 
-    rows.push({name: 'Event Api Count', value: domain.eventApiCount, type: 'String', url: domain.eventApiCountUrl});
+    rows.push({name: 'Number of Event Apis', value: '<i>(' + domain.eventApiCount + ') found</i>', type: 'String', url: domain.eventApiCountUrl});
   if (domain.hasOwnProperty('eventApiProductCount') && domain.eventApiProductCount > 0) 
-    rows.push({name: 'Event Api Product Count', value: domain.eventApiProductCount, type: 'String', url: domain.eventApiProductCountUrl});
+    rows.push({name: 'Number of Event Api Products', value: '<i>(' + domain.eventApiProductCount + ') found</i>', type: 'String', url: domain.eventApiProductCountUrl});
   
   if (domain.hasOwnProperty('createdTime')) rows.push({name: 'Created Time', value: new Date(domain.createdTime).toLocaleString(), type: 'String'});
   if (domain.hasOwnProperty('updatedTime')) rows.push({name: 'Updated Time', value: new Date(domain.updatedTime).toLocaleString(), type: 'String'});

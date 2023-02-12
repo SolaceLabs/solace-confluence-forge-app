@@ -23,7 +23,7 @@ const EventApi = (props) => {
   const converter = new showdown.Converter();
   
   if (eventApi.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(eventApi.description), type: 'String'});
-  if (eventApi.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: eventApi.versionsCount, type: 'Version', url: eventApi.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (eventApi.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + eventApi.versionsCount + ') found</i>', type: 'Version', url: eventApi.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (eventApi.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: eventApi.domainName, type: 'String', url: eventApi.domainUrl});
   if (eventApi.hasOwnProperty('shared')) rows.push({name: 'Shared', value: eventApi.shared ? 'True' : 'False', type: 'String'});
   if (eventApi.hasOwnProperty('type')) rows.push({name: 'Type', value: eventApi.type, type: 'String'});

@@ -36,6 +36,13 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+export const ContentContainer = styled.div`
+  min-height: 400px;
+  width: 98%;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+`;
 
 export const FormContainer = styled.form`
   padding: 8px 0;

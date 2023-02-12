@@ -45,12 +45,11 @@ const {
 } = require('./buildBlocks');
 
 const isSolaceURL = (url) => {
-  const regex = /https:\/\/(.*)\.solace\.cloud\/ep\/designer(($|\/domains$|\/domains\/[a-zA-Z0-9]*$)|(\/domains\/[a-zA-Z0-9]*\/applications$|\/domains\/[a-zA-Z0-9]*\/applications\?|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/events$|\/domains\/[a-zA-Z0-9]*\/events\?|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/schemas$|\/domains\/[a-zA-Z0-9]*\/schemas\?|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/enums$|\/domains\/[a-zA-Z0-9]*\/enums\?|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApis$|\/domains\/[a-zA-Z0-9]*\/eventApis\?|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApiProducts$|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\?|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*))/
+  const regex = /https:\/\/(.*)\.solace\.cloud\/ep\/designer(($|\/domains$|\/domains\/[a-zA-Z0-9]*$)|(\/domains\/[a-zA-Z0-9]*\/applications$|\/domains\/[a-zA-Z0-9]*\/applications\?|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applicationVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/events$|\/domains\/[a-zA-Z0-9]*\/events\?|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/schemas$|\/domains\/[a-zA-Z0-9]*\/schemas\?|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemaVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/enums$|\/domains\/[a-zA-Z0-9]*\/enums\?|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enumVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApis$|\/domains\/[a-zA-Z0-9]*\/eventApis\?|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApiProducts$|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\?|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProductVersions\/[a-zA-Z0-9]*))/
   return regex.test(url);
 }
 
 export const parseSolaceLink = (link, pageSize, pageNumber) => {
-  console.log('SOLACE LINK', link);
   let cmd = { pageSize: (pageSize ? pageSize : 5), pageNumber: (pageNumber ? pageNumber : 1)};
   if (!link) {
     cmd.error = 'Empty or missing URL';
@@ -58,13 +57,13 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
     return cmd;
   }
 
-  if (!isSolaceURL(link)) {
+  if (!isSolaceURL(link.trim())) {
     cmd.error = 'Invalid Solace Event Portal URL';
     console.log(cmd.error);
     return cmd;
   }
 
-  let url = new URL(link.replace(/&amp;/g, '&'));
+  let url = new URL(link.trim().replace(/&amp;/g, '&'));
   console.log('SOLACE URL', url.pathname);
 
   cmd.epDomain = url.hostname;
@@ -103,8 +102,8 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
         cmd.resourceId = vals[j+1];
       }
     }
-    if (vals[j] === 'applicationversions') {
-      cmd.resource = 'applicationversions';            
+    if (vals[j] === 'applicationVersions') {
+      cmd.resource = 'applicationVersions';            
       if (!vals[j+1]) {
         cmd.scope = 'all';
       } else {
@@ -123,8 +122,8 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
         cmd.resourceId = vals[j+1];
       }
     }
-    if (vals[j] === 'eventversions') {
-      cmd.resource = 'eventversions';            
+    if (vals[j] === 'eventVersions') {
+      cmd.resource = 'eventVersions';            
       if (!vals[j+1]) {
         cmd.scope = 'all';
       } else {
@@ -143,8 +142,8 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
         cmd.resourceId = vals[j+1];
       }
     }
-    if (vals[j] === 'schemaversions') {
-      cmd.resource = 'schemaversions';            
+    if (vals[j] === 'schemaVersions') {
+      cmd.resource = 'schemaVersions';            
       if (!vals[j+1]) {
         cmd.scope = 'all';
       } else {
@@ -163,8 +162,8 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
         cmd.resourceId = vals[j+1];
       }
     }
-    if (vals[j] === 'enumversions') {
-      cmd.resource = 'enumversions';            
+    if (vals[j] === 'enumVersions') {
+      cmd.resource = 'enumVersions';            
       if (!vals[j+1]) {
         cmd.scope = 'all';
       } else {
@@ -214,7 +213,6 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
       }
     }
   }
-  console.log('CMD1', cmd);
 
   if (!cmd.resource) {
     cmd.error = 'Unable to identify Event Portal resource';
@@ -229,10 +227,10 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
   }
 
   const resources = ['domains', 
-                      'applications', 'applicationversions', 
-                      'events', 'eventversions',
-                      'schemas', 'schemaversions',
-                      'enums', 'enumversions',
+                      'applications', 'applicationVersions', 
+                      'events', 'eventVersions',
+                      'schemas', 'schemaVersions',
+                      'enums', 'enumVersions',
                       'eventApis', 'eventApiVersions',
                       'eventApiProducts', 'eventApiProductVersions'];
   for (let i=0; i<resources.length; i++) {
@@ -255,12 +253,11 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
       }
     }
   };
-  console.log('CMD2', cmd);
   const versionedResources = {
-              'applications': {required: 'applicationId', versionName: 'applicationversions'},
-              'events': {required: 'eventId', versionName: 'eventversions'},
-              'schemas': {required: 'schemaId', versionName: 'schemaversions'},
-              'enums': {required: 'enumId', versionName: 'enumversions'},
+              'applications': {required: 'applicationId', versionName: 'applicationVersions'},
+              'events': {required: 'eventId', versionName: 'eventVersions'},
+              'schemas': {required: 'schemaId', versionName: 'schemaVersions'},
+              'enums': {required: 'enumId', versionName: 'enumVersions'},
               'eventApis': {required: 'eventApiId', versionName: 'eventApiVersions'},
               'eventApiProducts': {required: 'eventApiProductId', versionName: 'eventApiProductVersions'}
   };
@@ -332,7 +329,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.meta = response.meta;
       resource.data = await buildApplicationBlocks(response.data, cmd.epDomain); 
     }
-  } else if (cmd.resource === 'applicationversions') {
+  } else if (cmd.resource === 'applicationVersions') {
     let options = { id: cmd.applicationId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceApplicationVersions(cmd.applicationId, solaceCloudToken.epToken, options)
@@ -356,7 +353,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.meta = response.meta;
       resource.data = await buildEventBlocks(response.data, cmd.epDomain); 
     }
-  } else if (cmd.resource === 'eventversions') {
+  } else if (cmd.resource === 'eventVersions') {
     let options = { id: cmd.eventId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEventVersions(cmd.eventId, solaceCloudToken.epToken, options)
@@ -380,7 +377,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.meta = response.meta;
       resource.data = await buildSchemaBlocks(response.data, cmd.epDomain); 
     }
-  } else if (cmd.resource === 'schemaversions') {
+  } else if (cmd.resource === 'schemaVersions') {
     let options = { id: cmd.schemaId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceSchemaVersions(cmd.schemaId, solaceCloudToken.epToken, options)
@@ -404,7 +401,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.meta = response.meta;
       resource.data = await buildEnumBlocks(response.data, cmd.epDomain); 
     }
-  } else if (cmd.resource === 'enumversions') {
+  } else if (cmd.resource === 'enumVersions') {
     let options = { id: cmd.enumId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEnumVersions(cmd.enumId, solaceCloudToken.epToken, options)
@@ -441,7 +438,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.data = await buildEventApiVersionBlocks(response.data, cmd.epDomain); 
     }
   } else if (cmd.resource === 'eventApiProducts') {
-    let options = { id: cmd.eventApiId, domainId: cmd.domainId, domainName: cmd.domainName, 
+    let options = { id: cmd.eventApiProductId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceEventApiProducts(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
@@ -453,7 +450,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
       resource.data = await buildEventApiProductBlocks(response.data, cmd.epDomain); 
     }
   } else if (cmd.resource === 'eventApiProductVersions') {
-    let options = { id: cmd.eventApiId, domainId: cmd.domainId, domainName: cmd.domainName, 
+    let options = { id: cmd.eventApiProductId, domainId: cmd.domainId, domainName: cmd.domainName, 
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEventApiProductVersions(cmd.eventApiProductId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
@@ -1059,6 +1056,7 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
 export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=null) => {
   let results = [];
   let params = new URLSearchParams();
+  console.log(mode, solaceCloudToken, options);
 
   if (mode === 'name') params.append('name', options.name);
   if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
@@ -1088,7 +1086,7 @@ export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=
 export const getSolaceEventApiProductVersions = async (eventApiProductId, solaceCloudToken, options=null) => {
   let results = [];
   let params = new URLSearchParams();
-
+console.log(eventApiProductId, solaceCloudToken, options);
   params.append('eventApiProductIds', eventApiProductId);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
   if (options.hasOwnProperty('pageNumber')) params.append('pageNumber', options.pageNumber);
@@ -1104,10 +1102,8 @@ export const getSolaceEventApiProductVersions = async (eventApiProductId, solace
   if (results.data.length > 0) {
     response = await getEventApiProductByID(solaceCloudToken, eventApiProductId);
     eventApiProduct = response.data;
-console.log('eventApiProduct', eventApiProduct)    
     response = await getApplicationDomainByID(solaceCloudToken, eventApiProduct.applicationDomainId);
     domain = response.data;
-console.log('domain', domain)        
   }
 
   for (let i=0; i<results.data.length; i++) {
@@ -1116,7 +1112,7 @@ console.log('domain', domain)
     results.data[i].eventApiProductId = eventApiProduct.id;
     results.data[i].eventApiProductName = eventApiProduct.name;
   }
-  console.log('RESULTS', results);
+  console.log('getSolaceEventApiProductVersions RESULTS', results);
 
   let allEventApiVersions = {};
   let allEventApis = {};

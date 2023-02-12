@@ -23,7 +23,7 @@ const Event = (props) => {
   const converter = new showdown.Converter();
   
   if (event.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(event.description), type: 'String'});
-  if (event.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: event.versionsCount, type: 'Version', url: event.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (event.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + event.versionsCount + ') found</i>', type: 'Version', url: event.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (event.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: event.domainName, type: 'String', url: event.domainUrl});
   if (event.hasOwnProperty('shared')) rows.push({name: 'Shared', value: event.shared ? 'True' : 'False', type: 'String'});
   if (event.hasOwnProperty('type')) rows.push({name: 'Type', value: event.type, type: 'String'});
@@ -96,7 +96,7 @@ export const SolaceEvents = (props) => {
   }
 
   const fetchVersions = (url) => {
-    let vUrl = url.replace('events', 'eventversions');
+    let vUrl = url.replace('events', 'eventVersions');
     navigate(vUrl);
   }
 console.log('IN SOLACE EVENTS', events?.data);

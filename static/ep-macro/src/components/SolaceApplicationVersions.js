@@ -181,7 +181,7 @@ console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
         </SummaryCount>
         <SummaryActions>
           {command.url !== homeUrl && 
-            <Button appearance="subtle" onClick={() => navigate(homeUrl)}>Back</Button>}
+            <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>}
         </SummaryActions>
       </SummaryFooter>             
     </div>

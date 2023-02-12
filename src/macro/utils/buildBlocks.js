@@ -2,6 +2,15 @@ const states = { 1: "Draft", 2: "Released", 3: "Deprecated", 4: "Retired" }
 const approvalTypes = { 'automatic': "Automatic", 'manual': "Manual" }
 const publishStates = { 'unset': "Unset", 'published': "Published" }
 
+const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+const niceBytes = (x) => {
+  let l = 0, n = parseInt(x, 10) || 0;
+  while(n >= 1024 && ++l){
+      n = n/1024;
+  }
+  return(n.toFixed(n < 10 && l > 0 ? 1 : 0) + ' ' + units[l]);
+}
+
 export const buildDomainBlocks = (results, domain) => {
   let data = [];
   for (let i = 0; i < results.length; i++) {
@@ -9,7 +18,7 @@ export const buildDomainBlocks = (results, domain) => {
 
     block.id = results[i].id;
     block.name = results[i].name;
-    block.url = "https://" + domain + "/ep/designer/domains/" + results[i].id; 
+    block.url = "https://" + domain + "/ep/designer/domains/" + results[i].id + "/applications"; 
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.uniqueTopicAddressEnforcementEnabled = results[i].uniqueTopicAddressEnforcementEnabled;
@@ -57,7 +66,7 @@ export const buildDomainBlocks = (results, domain) => {
 
     block.domainId = results[i].id;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/" + results[i].id;
+    block.domainUrl = "https://" + domain + "/ep/designer/" + results[i].id + "/applications";
     
     data.push(block);
   }
@@ -74,7 +83,7 @@ export const buildApplicationBlocks = (results, domain) => {
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                + "/applications?selectedId=" + results[i].id;
+                + "/applications/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
 
@@ -99,7 +108,7 @@ export const buildApplicationBlocks = (results, domain) => {
 
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications/" + results[i].id;
     block.applicationType = results[i].applicationType;
@@ -137,11 +146,11 @@ export const buildApplicationVersionBlocks = (results, domain) => {
 
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.applicationId = results[i].applicationId;
     block.applicationName = results[i].applicationName;
-    block.applicationUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications?selectedId=" + results[i].applicationId;
+    block.applicationUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + results[i].applicationId;
 
     block.name = (block.displayName ? (block.version + ' [' + block.displayName + ']') : (block.version));
 
@@ -164,7 +173,7 @@ export const buildApplicationVersionBlocks = (results, domain) => {
         block.producedEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -182,7 +191,7 @@ export const buildApplicationVersionBlocks = (results, domain) => {
         block.consumedEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -232,7 +241,7 @@ export const buildEventBlocks = (results, domain) => {
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                  + "/events?selectedId=" + results[i].id;
+                  + "/events/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.shared = results[i].shared;
@@ -258,7 +267,7 @@ export const buildEventBlocks = (results, domain) => {
 
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/events/" + results[i].id;
     
@@ -294,11 +303,11 @@ export const buildEventVersionBlocks = (results, domain) => {
     }
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.eventId = results[i].eventId;
     block.eventName = results[i].eventName;
-    block.eventUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + results[i].eventId;
+    block.eventUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + results[i].eventId;
     if (results[i].schemaVersion) {
       block.schemaVersionId = results[i].schemaVersion.id;
       block.schemaVersionName = results[i].schemaVersion.displayName ? (results[i].schemaVersion.version + '[' + results[i].schemaVersion.displayName + ']') : results[i].schemaVersion.version;
@@ -332,7 +341,7 @@ export const buildEventVersionBlocks = (results, domain) => {
         block.producerApplications.push({
           applicationId: application.id,
           applicationName: application.name,
-          applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications?selectedId=" + application.id,
+          applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id,
           versionId: applicationVersion.id,
           versionName: applicationVersion.name,
           version: applicationVersion.version,
@@ -350,7 +359,7 @@ export const buildEventVersionBlocks = (results, domain) => {
         block.consumerApplications.push({
           applicationId: application.id,
           applicationName: application.name,
-          applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications?selectedId=" + application.id,
+          applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id,
           versionId: applicationVersion.id,
           versionName: applicationVersion.name,
           version: applicationVersion.version,
@@ -367,14 +376,14 @@ export const buildEventVersionBlocks = (results, domain) => {
 
 export const buildSchemaBlocks = (results, domain) => {
   let data = [];
-
+console.log('Schemas:', results);
   for (let i = 0; i < results.length; i++) {
     let block = {};
 
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                  + "/schemas?selectedId=" + results[i].id;
+                  + "/schemas/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.shared = results[i].shared;
@@ -404,7 +413,7 @@ export const buildSchemaBlocks = (results, domain) => {
 
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/schemas/" + results[i].id;
     
@@ -426,6 +435,11 @@ export const buildSchemaVersionBlocks = (results, domain) => {
     block.version = results[i].version;
     block.displayName = results[i].displayName;
     block.type = results[i].type;
+    block.content = results[i].content;
+    block.contentSize = results[i].content ? niceBytes(results[i].content.length) : 'Not specified';
+    block.contentUrl = results[i].content ? 
+          "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/schemaContent/" + results[i].schemaId + "?selectedVersionId=" + results[i].id :
+          null;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.name = (block.displayName ? (block.version + ' [' + block.displayName + ']') : (block.version));
@@ -440,11 +454,11 @@ export const buildSchemaVersionBlocks = (results, domain) => {
     }
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.schemaId = results[i].schemaId;
     block.schemaName = results[i].schemaName;
-    block.schemaUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/schemas?selectedId=" + results[i].schemaId;
+    block.schemaUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/schemas/" + results[i].schemaId;
     block.state = states[results[i].stateId];
 
     if (results[i].customAttributes && results[i].customAttributes.length) {
@@ -466,7 +480,7 @@ export const buildSchemaVersionBlocks = (results, domain) => {
         block.referringEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -491,7 +505,7 @@ export const buildEnumBlocks = (results, domain) => {
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                  + "/enums?selectedId=" + results[i].id;
+                  + "/enums/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.shared = results[i].shared;
@@ -517,7 +531,7 @@ export const buildEnumBlocks = (results, domain) => {
 
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/enums/" + results[i].id;
     
@@ -552,11 +566,11 @@ export const buildEnumVersionBlocks = (results, domain) => {
     }
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.enumId = results[i].enumId;
     block.enumName = results[i].enumName;
-    block.enumUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/enums?selectedId=" + results[i].enumId;
+    block.enumUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/enums/" + results[i].enumId;
     block.state = states[results[i].stateId];
 
     if (results[i].customAttributes && results[i].customAttributes.length) {
@@ -590,7 +604,7 @@ export const buildEnumVersionBlocks = (results, domain) => {
         block.referringEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -614,7 +628,7 @@ export const buildEventApiBlocks = (results, domain) => {
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                  + "/eventApis?selectedId=" + results[i].id;
+                  + "/eventApis/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.shared = results[i].shared;
@@ -639,7 +653,7 @@ export const buildEventApiBlocks = (results, domain) => {
     
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/eventApis/" + results[i].id;
     
@@ -674,11 +688,11 @@ export const buildEventApiVersionBlocks = (results, domain) => {
     }
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.eventApiId = results[i].eventApiId;
     block.eventApiName = results[i].eventApiName;
-    block.eventApiUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis?selectedId=" + results[i].eventApiId;
+    block.eventApiUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + results[i].eventApiId;
     block.state = states[results[i].stateId];
 
     if (results[i].customAttributes && results[i].customAttributes.length) {
@@ -700,7 +714,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
         block.producedEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -718,7 +732,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
         block.consumedEvents.push({
           eventId: event.id,
           eventName: event.name,
-          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events?selectedId=" + event.id,
+          eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
           versionName: eventVersion.name,
           version: eventVersion.version,
@@ -735,7 +749,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
         block.referringEventApiProducts.push({
           eventApiProductId: eventApiProduct.id,
           eventApiProductName: eventApiProduct.name,
-          eventApiProductUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts?selectedId=" + eventApiProduct.id,
+          eventApiProductUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts/" + eventApiProduct.id,
           versionId: eventApiProductVersion.id,
           versionName: eventApiProductVersion.name,
           version: eventApiProductVersion.version,
@@ -759,7 +773,7 @@ export const buildEventApiProductBlocks = (results, domain) => {
     block.id = results[i].id;
     block.name = results[i].name;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId 
-                  + "/eventApiProducts?selectedId=" + results[i].id;
+                  + "/eventApiProducts/" + results[i].id;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
     block.shared = results[i].shared;
@@ -786,7 +800,7 @@ export const buildEventApiProductBlocks = (results, domain) => {
     
     block.domainId = results[i].applicationDomainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].applicationDomainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/applications";
     block.versionsCount = results[i].numberOfVersions;
     block.versionsUrl = "https://" + domain + "/ep/designer/domains/" + results[i].applicationDomainId + "/eventApiProducts/" + results[i].id;
     
@@ -804,7 +818,7 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
 
     block.id = results[i].id;
     block.url = "https://" + domain + "/ep/designer/domains/" + results[i].domainId 
-                  + "/eventApiProducts/" + results[i].eventApiId + "?selectedVersionId=" + results[i].id;
+                  + "/eventApiProducts/" + results[i].eventApiProductId + "?selectedVersionId=" + results[i].id;
     block.version = results[i].version;
     block.displayName = results[i].displayName;
     block.createdTime = results[i].createdTime;
@@ -823,11 +837,11 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
     }
     block.domainId = results[i].domainId;
     block.domainName = results[i].domainName;
-    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + "?selectedDomainId=" + results[i].domainId;
+    block.domainUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications";
     
     block.eventApiProductId = results[i].eventApiProductId;
     block.eventApiProductName = results[i].eventApiProductName;
-    block.eventApiProductUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts?selectedId=" + results[i].eventApiId;
+    block.eventApiProductUrl = "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts/" + results[i].eventApiProductId;
     block.state = states[results[i].stateId];
     block.approvalType = approvalTypes[results[i].approvalType];
     block.publishState = publishStates[results[i].publishState]
@@ -843,8 +857,10 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
         });
       }
     }
-
+console.log('RESULTS', results);
     if (results[i].eventApiVersionIds && results[i].eventApiVersionIds.length) {
+      console.log('RESULTS results[i].eventApiVersions', results[i].eventApiVersions);
+      console.log('RESULTS results[i].eventApis', results[i].eventApis);
       block.eventApis = [];
       for (let j=0; j<results[i].eventApiVersionIds.length; j++) {
         let eventApiVersion = results[i].eventApiVersions[results[i].eventApiVersionIds[j]];
@@ -853,11 +869,11 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
         block.eventApis.push({
           eventApiId: eventApi.id,
           eventApiName: eventApi.name,
-          eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis?selectedId=" + eventApi.id,
+          eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
           versionId: eventApiVersion.id,
           versionName: eventApiVersion.name,
           version: eventApiVersion.version,
-          versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiVersion/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
+          versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
         });
       }
     }

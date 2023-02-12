@@ -23,7 +23,7 @@ const Application = (props) => {
   const converter = new showdown.Converter();
   
   if (application.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(application.description), type: 'String'});
-  if (application.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: application.versionsCount, type: 'Version', url: application.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (application.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + application.versionsCount + ') found</i>', type: 'Version', url: application.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (application.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: application.domainName, type: 'String', url: application.domainUrl});
   if (application.hasOwnProperty('brokerType')) rows.push({name: 'Broker Type', value: application.brokerType, type: 'String'});
   if (application.hasOwnProperty('applicationType')) rows.push({name: 'Application Type', value: application.applicationType, type: 'String'});
@@ -96,7 +96,7 @@ export const SolaceApplications = (props) => {
   }
 
   const fetchVersions = (url) => {
-    let vUrl = url.replace('applications', 'applicationversions');
+    let vUrl = url.replace('applications', 'applicationVersions');
     navigate(vUrl);
   }
 console.log('IN SOLACE APPLICATIONS', applications?.data);

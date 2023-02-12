@@ -157,7 +157,7 @@ console.log('IN SOLACE ENUM VERSIONS', ennumVersions?.data);
         </SummaryCount>
         <SummaryActions>
           {command.url !== homeUrl && 
-            <Button appearance="subtle" onClick={() => navigate(homeUrl)}>Back</Button>}
+            <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>}
         </SummaryActions>
       </SummaryFooter>             
     </div>

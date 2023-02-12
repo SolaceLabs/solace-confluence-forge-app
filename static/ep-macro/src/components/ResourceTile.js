@@ -22,7 +22,13 @@ export const ResourceTile = (props) => {
         );
 
       return ReactHtmlParser (row.value);
-    } else if (row.type === 'Table') {   
+    } else if (row.type === 'Content') {
+      return (
+        <div>
+          {ReactHtmlParser (row.value)}
+        </div>
+      );
+    }else if (row.type === 'Table') {   
       return (
         <div>
           {row.value.map(v => {
@@ -53,7 +59,21 @@ export const ResourceTile = (props) => {
           { key: index + '-2', content: <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                           <span style={{textAlign: 'left'}}>{ getValue(row) } </span>
                                           <span style={{float: 'right'}}>
-                                            <Button appearance="subtle" onClick={() => row.navigate(row.url)}>{row.title}</Button>
+                                            <Button appearance="primary" onClick={() => row.navigate(row.url)}>{row.title}</Button>
+                                          </span>
+                                        </div>}
+        ]
+      })
+    } else if (row.type === 'Content') {
+      console.log('CONTENT ROW', row);
+      tRows.push({
+        key: index,
+        cells: [
+          { key: index + '-1', content: <div style={{padding: 7}}><b>{row.name}</b></div> },
+          { key: index + '-2', content: <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                                          <span style={{textAlign: 'left'}}>{ getValue(row) } </span>
+                                          <span style={{float: 'right'}}>
+                                            <Button appearance="primary" onClick={() => row.open(row.key)}>{row.title}</Button>
                                           </span>
                                         </div>}
         ]

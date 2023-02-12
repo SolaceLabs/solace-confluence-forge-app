@@ -1,5 +1,6 @@
-import { useEffect, useState, Fragment } from "react"
+import { useEffect, useState, Fragment, Text } from "react"
 import { invoke } from '@forge/bridge';
+import ReactHtmlParser from 'react-html-parser'; 
 import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
 import Pagination from '@atlaskit/pagination';
@@ -12,13 +13,14 @@ import {
 import '../common/stati.css';
 
 import {
-  SummaryActions, SummaryCount, SummaryFooter, ScrollContainer, TitleContainer,
+  SummaryActions, SummaryCount, SummaryFooter, ScrollContainer, TitleContainer, MainContainer, ContentContainer,
 } from '../Styles';
 import { ResourceTile } from "./ResourceTile";
 var showdown = require('showdown');
 
 const SchemaVersion = (props) => {
-  const { schema, navigate, homeUrl } = props;
+  const { schema, navigate, openModal, homeUrl } = props;
+console.log('SchemaVersion', props)
   const counts = [];
   const rows = [];
   const converter = new showdown.Converter();
@@ -34,6 +36,7 @@ const SchemaVersion = (props) => {
   if (schema.hasOwnProperty('state')) rows.push({name: 'State', value: schema.state, type: 'String'});
   if (schema.hasOwnProperty('schemaName')) rows.push({name: 'Schema Name', value: schema.schemaName, type: 'String', url: schema.schemaUrl, navigate: navigate});
   if (schema.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: schema.domainName, type: 'String', url: schema.domainUrl});
+  if (schema.hasOwnProperty('content')) rows.push({key: schema.id, name: 'Content', value: schema.contentSize, open: openModal, type: 'Content', title: 'Fetch Schema'});
   
   if (schema.customAttributes && schema.customAttributes.length) {
     rows.push({name: 'Custom Attributes', value: '<i>(' + schema.customAttributes.length + ') found</i>', type: 'String'});
@@ -61,6 +64,7 @@ const SchemaVersion = (props) => {
     <ResourceTile 
       name={{name: 'Schema Version', value: schema.name, url: schema.url}} 
       counts={counts} 
+      open={openModal}
       rows={rows} />
   )
 }
@@ -69,6 +73,8 @@ export const SolaceSchemaVersions = (props) => {
   const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
   const [schemaVersions, setSchemasVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [versionKey, setVersionKey] = useState(false);
 
   useEffect(() => {
     try {
@@ -116,6 +122,17 @@ export const SolaceSchemaVersions = (props) => {
     navigate(homeUrl);
   }
 
+  const openModal = (key) => {
+    console.log('Modal Opened', key);
+    setVersionKey(key);
+    setOpenDialog(true);
+  }
+
+  const getContent = () => {
+    let content = schemaVersions?.data.find(s => s.id === versionKey)?.content;
+    return content ? ReactHtmlParser (content.replaceAll('\n', '<br/>').replaceAll(' ', '&nbsp;')) : 'No schema specified';
+  }
+
 console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
 
   return (
@@ -125,11 +142,20 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
         <Content>
           <Main>
           <ScrollContainer>
-          <Fragment>            
-            {schemaVersions?.data.length && schemaVersions.data.map((schema, index) => {
-              return <SchemaVersion key={index} navigate={goHome} schema={schema} />
-            })}
-          </Fragment>
+            {openDialog &&
+              <Fragment> 
+                <ContentContainer>
+                  <div>{getContent()}</div>
+                </ContentContainer>
+              </Fragment> 
+            }
+            {!openDialog &&
+              <Fragment>
+                {schemaVersions?.data.length && schemaVersions.data.map((schema, index) => {
+                  console.log('Build SchemaVersion', index);
+                  return <SchemaVersion navigate={goHome} openModal={openModal} schema={schema} />
+                })}
+              </Fragment>}              
           </ScrollContainer>
           </Main>
         </Content>
@@ -142,8 +168,14 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
             getPageButtons(1)}
         </SummaryCount>
         <SummaryActions>
-          {command.url !== homeUrl && 
-            <Button appearance="subtle" onClick={() => navigate(homeUrl)}>Back</Button>}
+          {openDialog &&
+            <div>
+              <Button appearance="primary" onClick={() => setOpenDialog(false)}>Close</Button>
+            </div>
+          }
+          {!openDialog && command.url !== homeUrl && 
+            <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>
+          }
         </SummaryActions>
       </SummaryFooter>             
     </div>

@@ -23,7 +23,7 @@ const Enum = (props) => {
   const converter = new showdown.Converter();
   
   if (ennum.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(ennum.description), type: 'String'});
-  if (ennum.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: ennum.versionsCount, type: 'Version', url: ennum.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (ennum.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + ennum.versionsCount + ') found</i>', type: 'Version', url: ennum.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (ennum.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: ennum.domainName, type: 'String', url: ennum.domainUrl});
   if (ennum.hasOwnProperty('shared')) rows.push({name: 'Shared', value: ennum.shared ? 'True' : 'False', type: 'String'});
   if (ennum.hasOwnProperty('type')) rows.push({name: 'Type', value: ennum.type, type: 'String'});
@@ -99,7 +99,7 @@ export const SolaceEnums = (props) => {
   }
 
   const fetchVersions = (url) => {
-    let vUrl = url.replace('enums', 'enumversions');
+    let vUrl = url.replace('enums', 'enumVersions');
     navigate(vUrl);
   }
 console.log('IN SOLACE ENUMS', ennums?.data);

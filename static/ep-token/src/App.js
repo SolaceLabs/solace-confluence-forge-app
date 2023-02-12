@@ -195,13 +195,13 @@ function App() {
 
               {({ formProps }) => (
                 <form id="form-with-id" {...formProps}>
-                  <ModalBody>
-                    <Field label="Solace REST API Token" name="token" isRequired
+                  <ModalBody style={{paddingBottom: 10}}>
+                    <Field label="Solace REST API Token" name="token" isRequired 
                           defaultValue={currentUserToken ? currentUserToken.value.epToken : ""}>
                       {({ fieldProps }) => (
                         <TextArea {...fieldProps} 
                           resize="auto"
-                          rows={15}
+                          rows={20}
                           isRequired={true}
                         />
                       )}

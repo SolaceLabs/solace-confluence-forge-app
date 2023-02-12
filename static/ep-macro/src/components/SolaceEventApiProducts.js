@@ -23,7 +23,7 @@ const EventApiProduct = (props) => {
   const converter = new showdown.Converter();
   
   if (eventApiProduct.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(eventApiProduct.description), type: 'String'});
-  if (eventApiProduct.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: eventApiProduct.versionsCount, type: 'Version', url: eventApiProduct.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (eventApiProduct.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + eventApiProduct.versionsCount + ') found</i>', type: 'Version', url: eventApiProduct.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (eventApiProduct.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: eventApiProduct.domainName, type: 'String', url: eventApiProduct.domainUrl});
   if (eventApiProduct.hasOwnProperty('shared')) rows.push({name: 'Shared', value: eventApiProduct.shared ? 'True' : 'False', type: 'String'});
   if (eventApiProduct.hasOwnProperty('brokerType')) rows.push({name: 'Broker Type', value: eventApiProduct.brokerType, type: 'String'});

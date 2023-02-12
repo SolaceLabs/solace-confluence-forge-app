@@ -199,7 +199,7 @@ function App() {
             />
           }
 
-          {(isFetched && solCommand.resource === 'applicationversions') &&
+          {(isFetched && solCommand.resource === 'applicationVersions') &&
             <SolaceApplicationVersions 
               command={solCommand}
               token={token}
@@ -223,7 +223,7 @@ function App() {
               navigate={navigateTo}
             />}
 
-          {(isFetched && solCommand.resource === 'eventversions') &&
+          {(isFetched && solCommand.resource === 'eventVersions') &&
             <SolaceEventVersions 
               command={solCommand}
               token={token}
@@ -247,7 +247,7 @@ function App() {
               navigate={navigateTo}
             />}
 
-          {(isFetched && solCommand.resource === 'schemaversions') &&
+          {(isFetched && solCommand.resource === 'schemaVersions') &&
             <SolaceSchemaVersions 
               command={solCommand}
               token={token}
@@ -271,7 +271,7 @@ function App() {
               navigate={navigateTo}
             />}
 
-          {(isFetched && solCommand.resource === 'enumversions') &&
+          {(isFetched && solCommand.resource === 'enumVersions') &&
             <SolaceEnumVersions
               command={solCommand}
               token={token}

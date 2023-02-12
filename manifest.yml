@@ -4,14 +4,15 @@ modules:
       resource: ep-token
       resolver:
         function: ep-token
-      title: Solace REST API Token Manager
+      title: Solace Event Portal Token Manager
       route: ep-token
   macro:
     - key: solace-ep-macro
       resource: ep-macro
       resolver:
         function: ep-macro
-      title: Solace
+      title: Solace Event Portal
+      icon: https://developer.atlassian.com/platform/forge/images/issue-panel-icon.svg
       config:
         function: ep-macro-config
   function:

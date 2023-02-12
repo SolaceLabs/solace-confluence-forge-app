@@ -23,7 +23,7 @@ const Schema = (props) => {
   const converter = new showdown.Converter();
   
   if (schema.hasOwnProperty('description')) rows.push({name: 'Description', value: converter.makeHtml(schema.description), type: 'String'});
-  if (schema.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: schema.versionsCount, type: 'Version', url: schema.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
+  if (schema.hasOwnProperty('versionsCount')) rows.push({name: 'Number of Versions', value: '<i>(' + schema.versionsCount + ') found</i>', type: 'Version', url: schema.versionsUrl, navigate: navigate, title: 'Fetch Version(s)'});
   if (schema.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: schema.domainName, type: 'String', url: schema.domainUrl});
   if (schema.hasOwnProperty('shared')) rows.push({name: 'Shared', value: schema.shared ? 'True' : 'False', type: 'String'});
   if (schema.hasOwnProperty('type')) rows.push({name: 'Type', value: schema.type, type: 'String'});
@@ -99,7 +99,7 @@ export const SolaceSchemas = (props) => {
   }
 
   const fetchVersions = (url) => {
-    let vUrl = url.replace('schemas', 'schemaversions');
+    let vUrl = url.replace('schemas', 'schemaVersions');
     navigate(vUrl);
   }
 console.log('IN SOLACE SCHEMAS', schemas?.data);
