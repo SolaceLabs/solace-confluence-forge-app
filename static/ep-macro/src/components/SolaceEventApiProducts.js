@@ -50,24 +50,31 @@ const EventApiProduct = (props) => {
 }
 
 export const SolaceEventApiProducts = (props) => {
-  const { command, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [eventApiProducts, setEventApiProducts] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceEventApiProducts Token', token);
-      (async () => {
-        const eventApiProducts = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(eventApiProducts);
+    console.log('SolaceEventApiProducts Token', token);
+    (async () => {
+      const eventApiProducts = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(eventApiProducts);
+      if (eventApiProducts.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(eventApiProducts.message);
+      } else {
         setEventApiProducts(eventApiProducts);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!eventApiProducts && !loadFailed) {
     return (

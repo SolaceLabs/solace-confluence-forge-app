@@ -56,6 +56,9 @@ const EventVersion = (props) => {
   if (event.producerApplications && event.producerApplications.length) {
     rows.push({name: 'Declared Producer Applications', value: '<i>(' + event.producerApplications.length + ') found</i>', type: 'String'});
     event.producerApplications.map(ca => {
+      if (ca.applicationId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.applicationName, type: 'String', url: ca.applicationUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -68,6 +71,9 @@ const EventVersion = (props) => {
   if (event.consumerApplications && event.consumerApplications.length) {
     rows.push({name: 'Declared Consumer Applications', value: '<i>(' + event.consumerApplications.length + ') found</i>', type: 'String'});
     event.consumerApplications.map(ca => {
+      if (ca.applicationId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.applicationName, type: 'String', url: ca.applicationUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -109,24 +115,31 @@ const EventVersion = (props) => {
 }
 
 export const SolaceEventVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [eventVersions, setEventVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceEventVersions Token', token);
-      (async () => {
-        const eventVersions = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(eventVersions);
+    console.log('SolaceEventVersions Token', token);
+    (async () => {
+      const eventVersions = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(eventVersions);
+      if (eventVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(eventVersions.message);
+      } else {
         setEventVersions(eventVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!eventVersions && !loadFailed) {
     return (

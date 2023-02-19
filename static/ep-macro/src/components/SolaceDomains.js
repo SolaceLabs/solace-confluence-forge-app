@@ -60,24 +60,31 @@ const Domain = (props) => {
 }
 
 export const SolaceDomains = (props) => {
-  const { command, token, paginate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, page, setIsBlanketVisible, setFetchError} = props;
   const [domains, setDomains] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceDomains Token', token);
-      (async () => {
-        const domains = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(domains);
+    console.log('SolaceDomains Token', token);
+    (async () => {
+      const domains = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(domains);
+      if (domains.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(domains.message);
+      } else {
         setDomains(domains);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!domains && !loadFailed) {
     return (

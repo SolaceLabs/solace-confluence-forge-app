@@ -5,13 +5,18 @@ import { router } from '@forge/bridge';
 // Atlaskit
 import Spinner from '@atlaskit/spinner';
 import Image from '@atlaskit/image';
+import Button from '@atlaskit/button';  
 // Custom Styles
 import {
   Card, LoadingContainer, BannerContainer, MainContainer, MainPreloadContainer, EPUrlContainer
 } from './Styles';
+import {
+  SummaryActions, SummaryCount, SummaryFooter
+} from './Styles';
 
 import SolaceLogo from './images/solace.png';
 import Blanket from '@atlaskit/blanket';
+import Lozenge from '@atlaskit/lozenge';
 import { SolaceDomains } from './components/SolaceDomains';
 import { SolaceApplications } from './components/SolaceApplications';
 import { SolaceApplicationVersions } from './components/SolaceApplicationVersions';
@@ -34,10 +39,11 @@ function App() {
   const [token, setToken] = useState(null);
   const [solCommand, setSolCommand] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const [refresh, setRefresh] = useState(new Date().getMilliseconds());
   const [page, setPage] = useState(1);
   const [isBlanketVisible, setIsBlanketVisible] = useState(false);
-
+  
   const openLink = (e) => {
     router.open(e.currentTarget.dataset.url);
   }
@@ -113,6 +119,18 @@ function App() {
     setConfig({url: url})
     const command = await parseUrl(url, 5, 1);
     setSolCommand(command);
+    setRefresh(new Date().getMilliseconds());
+  }
+
+  const goBackOrigin = async () => {
+    async function initToBack() {
+      const url = baseConfig.url;
+      const command = await parseUrl(url, 5, 1);
+      setSolCommand(command);
+      setFetchError(false);
+      setIsFetched(true);
+    };
+    initToBack();
   }
 
   useEffect(() => {
@@ -150,6 +168,41 @@ function App() {
     );
   }
 
+  if (isFetched && solCommand && fetchError) {
+    let errorString = fetchError;
+    if (fetchError.indexOf('Error: ') >= 0)
+      errorString = fetchError.substring(7);
+    return (
+      <div>
+        <div>
+          <MainPreloadContainer>
+            <BannerContainer>
+              <Image src={SolaceLogo} style={{height: 36}} alt="Solace Logo"/>
+              <span style={{marginRight: 10, fontSize: 14, fontWeight: 'bold'}}>Solace Event Portal</span>
+            </BannerContainer>
+            <div style={{padding: 5, width: '100% !important'}}>
+              <Lozenge appearance="removed" isBold style={{width: '100% !important'}}>
+                Error:
+              </Lozenge> 
+              <span>&nbsp;{errorString}</span>
+              <span> - Review your REST API Token permissions.</span>
+            </div>
+            <SummaryFooter>
+              <SummaryCount/>
+              <SummaryActions>
+                {solCommand.url.indexOf('Versions') > 0 &&
+                  <Button appearance="primary" onClick={goBackOrigin}>Back</Button>}
+              </SummaryActions>
+            </SummaryFooter>             
+          </MainPreloadContainer>
+          <EPUrlContainer style={{}}>
+            URL: <a href="#" data-url={baseConfig.url} onClick={openLink} target="_blank">{baseConfig.url}</a>
+          </EPUrlContainer>
+        </div>
+      </div>
+    );
+  }
+
   const paginate = async (e, toPage) => {
     e.preventDefault();
     if (page === toPage)
@@ -184,6 +237,7 @@ function App() {
               page={page}
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
+              setFetchError={setFetchError}
             />
           }
 
@@ -196,6 +250,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
             />
           }
 
@@ -208,6 +263,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />
           }
@@ -221,6 +277,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
             />}
 
           {(isFetched && solCommand.resource === 'eventVersions') &&
@@ -232,6 +289,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />
           }
@@ -245,6 +303,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
             />}
 
           {(isFetched && solCommand.resource === 'schemaVersions') &&
@@ -256,6 +315,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />
           }
@@ -268,6 +328,7 @@ function App() {
               page={page}
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
+              setFetchError={setFetchError}
               navigate={navigateTo}
             />}
 
@@ -280,6 +341,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />}
 
@@ -291,6 +353,7 @@ function App() {
               page={page}
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
+              setFetchError={setFetchError}
               navigate={navigateTo}
             />}
 
@@ -303,6 +366,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />}        
 
@@ -315,6 +379,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
             />}
 
           {(isFetched && solCommand.resource === 'eventApiProductVersions') &&
@@ -326,6 +391,7 @@ function App() {
               setIsBlanketVisible={setIsBlanketVisible}
               refresh={refresh}
               navigate={navigateTo}
+              setFetchError={setFetchError}
               homeUrl={baseConfig.url}
             />}                    
         </MainContainer>

@@ -310,7 +310,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     let options = { id: cmd.domainId, versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceApplicationDomains(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find domain";
+      resource.message = response.error ? response.error : "Could not find domain";
     } else {
       resource.status = true;
       resource.message = response.data.length + " domains found";
@@ -322,7 +322,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceApplications(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "No applications found";
+      resource.message = response.error ? response.error : "No applications found";
     } else {
       resource.status = true;
       resource.message = response.data.length + " applications found";
@@ -334,7 +334,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceApplicationVersions(cmd.applicationId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find application version";
+      resource.message = response.error ? response.error : "Could not find application version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " application versions found";
@@ -346,7 +346,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceEvents(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "No events found";
+      resource.message = response.error ? response.error : "No events found";
     } else {
       resource.status = true;
       resource.message = response.data.length + " events found";
@@ -358,7 +358,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEventVersions(cmd.eventId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find event version";
+      resource.message = response.error ? response.error : "Could not find event version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " event versions found";
@@ -382,7 +382,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceSchemaVersions(cmd.schemaId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find schema version";
+      resource.message = response.error ? response.error : "Could not find schema version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " schema versions found";
@@ -394,7 +394,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceEnums(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "No enums found";
+      resource.message = response.error ? response.error : "No enums found";
     } else {
       resource.status = true;
       resource.message = response.data.length + " enums found";
@@ -406,7 +406,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEnumVersions(cmd.enumId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find enum version";
+      resource.message = response.error ? response.error : "Could not find enum version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " enum versions found";
@@ -418,7 +418,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceEventApis(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "No EventApis found";
+      resource.message = response.error ? response.error : "No EventApis found";
     } else {
       resource.status = true;
       resource.message = response.data.length + " EventApis found";
@@ -430,7 +430,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEventApiVersions(cmd.eventApiId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find EventApi version";
+      resource.message = response.error ? response.error : "Could not find EventApi version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " EventApi versions found";
@@ -442,7 +442,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceEventApiProducts(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "No Event API Products found";
+      resource.message = response.error ? response.error : "No Event API Products found";
     } else {
       resource.status = true;
       resource.message = response.data.length + " EventApis found";
@@ -454,7 +454,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
                     versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber};
     response = await getSolaceEventApiProductVersions(cmd.eventApiProductId, solaceCloudToken.epToken, options)
     if (!response.data.length) {
-      resource.message = "Could not find Event API Product version";
+      resource.message = response.error ? response.error : "Could not find Event API Product version";
     } else {
       resource.status = true;
       resource.message = response.data.length + " Event API Product versions found";
@@ -480,7 +480,7 @@ export const getSolaceApplicationDomains = async (mode, solaceCloudToken, option
     response = await getApplicationDomains(solaceCloudToken, params);
   else if (mode === 'id')
     response = await getApplicationDomainByID(solaceCloudToken, options.id, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   return results;
 }
 
@@ -500,16 +500,21 @@ export const getSolaceApplications = async (mode, solaceCloudToken, options=null
     response = await getApplications(solaceCloudToken, params);
   else if (mode === 'id')
     response = await getApplicationByID(solaceCloudToken, options.id, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  console.log('getSolaceApplications response: ', response);
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId]) 
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
+  console.log('getSolaceApplications results: ', results);
   return results;
 }
 
@@ -526,7 +531,7 @@ export const getSolaceApplicationVersions = async (applicationId, solaceCloudTok
     response = await getApplicationVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getApplicationVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domain = undefined;
   let application = undefined;
@@ -611,13 +616,16 @@ export const getSolaceEvents = async (mode, solaceCloudToken, options=null) => {
     else
       response = await getEventVersionByID(solaceCloudToken, options.versionId, params);
   }
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId])
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
@@ -637,7 +645,7 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
     response = await getEventVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getEventVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domain = undefined;
   let event = undefined;
@@ -734,17 +742,20 @@ export const getSolaceSchemas = async (mode, solaceCloudToken, options=null) => 
 
   if (mode === 'all' || mode === 'name') {
     let response = await getSchemas(solaceCloudToken, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   } else if (mode === 'id') {
     let response = await getSchemaByID(solaceCloudToken, options.id, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   }
 
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId])
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
@@ -765,7 +776,7 @@ export const getSolaceSchemaVersions = async (schemaId, solaceCloudToken, option
     response = await getSchemaVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getSchemaVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domain = undefined;
   let schema = undefined;
@@ -831,17 +842,20 @@ export const getSolaceEnums = async (mode, solaceCloudToken, options=null) => {
 
   if (mode === 'all' || mode === 'name') {
     let response = await getEnums(solaceCloudToken, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   } else if (mode === 'id') {
     let response = await getEnumByID(solaceCloudToken, options.id, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   }
 
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId])
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
@@ -861,7 +875,7 @@ export const getSolaceEnumVersions = async (enumId, solaceCloudToken, options=nu
     response = await getEnumVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getEnumVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domain = undefined;
   let ennum = undefined;
@@ -927,16 +941,19 @@ export const getSolaceEventApis = async (mode, solaceCloudToken, options=null) =
 
   if (mode === 'all' || mode === 'name') {
     let response = await getEventApis(solaceCloudToken, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   } else if (mode === 'id') {
     let response = await getEventApiByID(solaceCloudToken, options.id, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   }
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId])
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
@@ -956,7 +973,7 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
     response = await getEventApiVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getEventApiVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domain = undefined;
   let eventApi = undefined;
@@ -1067,16 +1084,19 @@ export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=
 
   if (mode === 'all' || mode === 'name') {
     let response = await getEventApiProducts(solaceCloudToken, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   } else if (mode === 'id') {
     let response = await getEventApiProductByID(solaceCloudToken, options.id, params);
-    results = {data: results.concat(response.data), meta: response.meta};
+    results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   }
   let domains = {};
   for (let i=0; i<results.data.length; i++) {
-    if (!domains[results.data[i].applicationDomainId])
-      domains[results.data[i].applicationDomainId] = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
     results.data[i].domainId = results.data[i].applicationDomainId;
+    if (!domains[results.data[i].applicationDomainId]) {
+      const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
+      if (!domainName)
+        domains[results.data[i].applicationDomainId] = domainName;
+    }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
@@ -1096,7 +1116,7 @@ console.log(eventApiProductId, solaceCloudToken, options);
     response = await getEventApiProductVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getEventApiProductVersions(solaceCloudToken, params);
-  results = {data: results.concat(response.data), meta: response.meta};
+  results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
   let domain = undefined;
   let eventApiProduct = undefined;
   if (results.data.length > 0) {

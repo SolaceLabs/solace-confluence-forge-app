@@ -52,24 +52,31 @@ const Enum = (props) => {
 }
 
 export const SolaceEnums = (props) => {
-  const { command, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [ennums, setEnums] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceEnums Token', token);
-      (async () => {
-        const ennums = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(ennums);
+    console.log('SolaceEnums Token', token);
+    (async () => {
+      const ennums = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(ennums);
+      if (ennums.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(ennums.message);
+      } else {
         setEnums(ennums);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!ennums && !loadFailed) {
     return (

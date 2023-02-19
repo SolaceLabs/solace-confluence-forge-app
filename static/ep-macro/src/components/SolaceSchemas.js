@@ -3,6 +3,7 @@ import { invoke } from '@forge/bridge';
 import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
 import Pagination from '@atlaskit/pagination';
+import Lozenge from '@atlaskit/lozenge';
 import {
   Content,
   Main,
@@ -52,24 +53,31 @@ const Schema = (props) => {
 }
 
 export const SolaceSchemas = (props) => {
-  const { command, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [schemas, setSchemas] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceSchemas Token', token);
-      (async () => {
-        const schemas = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(schemas);
+    console.log('SolaceSchemas Token', token);
+    (async () => {
+      const schemas = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(schemas);
+      if (schemas.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(schemas.message);
+      } else {
         setSchemas(schemas);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!schemas && !loadFailed) {
     return (

@@ -49,6 +49,9 @@ const EventApiVersion = (props) => {
   if (eventApi.producedEvents && eventApi.producedEvents.length) {
     rows.push({name: 'Produced Events', value: '<i>(' + eventApi.producedEvents.length + ') found</i>', type: 'String'});
     eventApi.producedEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.eventName, type: 'String', url: ca.eventUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -61,6 +64,9 @@ const EventApiVersion = (props) => {
   if (eventApi.consumedEvents && eventApi.consumedEvents.length) {
     rows.push({name: 'Consumed Events', value: '<i>(' + eventApi.consumedEvents.length + ') found</i>', type: 'String'});
     eventApi.consumedEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.eventName, type: 'String', url: ca.eventUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -73,6 +79,9 @@ const EventApiVersion = (props) => {
   if (eventApi.referringEventApiProducts && eventApi.referringEventApiProducts.length) {
     rows.push({name: 'Declared Event Api Products', value: '<i>(' + eventApi.referringEventApiProducts.length + ') found</i>', type: 'String'});
     eventApi.referringEventApiProducts.map(ca => {
+      if (!ca.eventApiProductId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.eventApiProductName, type: 'String', url: ca.eventApiProductUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -91,22 +100,29 @@ const EventApiVersion = (props) => {
 }
 
 export const SolaceEventApiVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [eventApiVersions, setEventApisVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      (async () => {
-        const eventApiVersions = await invoke('get-ep-resource', {command, token: token.value});
+    (async () => {
+      const eventApiVersions = await invoke('get-ep-resource', {command, token: token.value});
+      if (eventApiVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(eventApiVersions.message);
+      } else {
         setEventApisVersions(eventApiVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!eventApiVersions && !loadFailed) {
     return (

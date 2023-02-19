@@ -62,6 +62,9 @@ const EnumVersion = (props) => {
   if (ennum.referringEvents && ennum.referringEvents.length) {
     rows.push({name: 'Referring Event Versions', value: '<i>(' + ennum.referringEvents.length + ') found</i>', type: 'String'});
     ennum.referringEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.eventName, type: 'String', url: ca.eventUrl},
         (ca.hasOwnProperty('versionName') ?
@@ -80,24 +83,31 @@ const EnumVersion = (props) => {
 }
 
 export const SolaceEnumVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [ennumVersions, setEnumsVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceEnumVersions Token', token);
-      (async () => {
-        const ennumVersions = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(ennumVersions);
+    console.log('SolaceEnumVersions Token', token);
+    (async () => {
+      const ennumVersions = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(ennumVersions);
+      if (ennumVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(ennumVersions.message);
+      } else {
         setEnumsVersions(ennumVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!ennumVersions && !loadFailed) {
     return (

@@ -17,7 +17,7 @@ import { ResourceTile } from "./ResourceTile";
 var showdown = require('showdown');
 
 const Application = (props) => {
-  const { application, navigate } = props;
+  const { application, navigate, container } = props;
   const counts = [];
   const rows = [];
   const converter = new showdown.Converter();
@@ -49,24 +49,31 @@ const Application = (props) => {
 }
 
 export const SolaceApplications = (props) => {
-  const { command, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [applications, setApplications] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceApplications Token', token);
-      (async () => {
-        const applications = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(applications);
+    console.log('SolaceApplications Token', token);
+    (async () => {
+      const applications = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(applications);
+      if (applications.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(applications.message);
+      } else {
         setApplications(applications);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!applications && !loadFailed) {
     return (

@@ -1,7 +1,7 @@
 import api, { fetch } from '@forge/api';
 
 const invokeEventPortalAPI = async (token, method, endpoint, data = {}) => {
-  console.log('In EP API');
+  console.log('In EP API Endpoint: ', endpoint, ' TOKEN: ', token);
   try {
     if (!token || !method || !endpoint) {
       throw new Error('You must pass a SolaceCloud Token, method, and endpoint')
@@ -18,10 +18,21 @@ const invokeEventPortalAPI = async (token, method, endpoint, data = {}) => {
       }
     });
     console.log('In EP API Response JSON- ', response.status, response.statusText);
+    console.log('DEBUG: ', response);
+    if (response.status !== 200)
+      throw new Error(response.statusText);
+
     return response.json()
   } catch (error) {
-    console.log('In EP API Error - ', error);
-    throw new Error(error.response.data.message)
+    console.log('In EP API Error - ', error, ' - ', error.message, ' - ', error.toString());
+    return {
+      status: false,
+      error: error.toString(),
+      method, 
+      endpoint,
+      meta: {},
+      data: []
+    }
   }
 }
 

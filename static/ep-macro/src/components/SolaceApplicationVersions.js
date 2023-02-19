@@ -18,7 +18,7 @@ import { ResourceTile } from "./ResourceTile";
 var showdown = require('showdown');
 
 const ApplicationVersion = (props) => {
-  const { application, navigate } = props;
+  const { application, navigate, setFetchError } = props;
   const counts = [];
   const rows = [];
   const converter = new showdown.Converter();
@@ -48,6 +48,9 @@ const ApplicationVersion = (props) => {
   if (application.producedEvents && application.producedEvents.length) {
     rows.push({name: 'Produced Events', value: '<i>(' + application.producedEvents.length + ') found</i>', type: 'String'});
     application.producedEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       const caRows = [];
       caRows.push({name: 'Name', value: ca.eventName, type: 'String', url: ca.eventUrl});      
       if (application.hasOwnProperty('versionName')) 
@@ -61,6 +64,9 @@ const ApplicationVersion = (props) => {
   if (application.consumedEvents && application.consumedEvents.length) {
     rows.push({name: 'Consumed Events', value: '<i>(' + application.consumedEvents.length + ') found</i>', type: 'String'});
     application.consumedEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       const caRows = [];
       caRows.push({name: 'Name', value: ca.eventName, type: 'String', url: ca.eventUrl});      
       if (application.hasOwnProperty('versionName')) 
@@ -104,24 +110,31 @@ const ApplicationVersion = (props) => {
 }
 
 export const SolaceApplicationVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [applicationVersions, setApplications] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceApplicationVersions Token', token);
-      (async () => {
-        const applicationVersions = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(applicationVersions);
+    console.log('SolaceApplicationVersions Token', token);
+    (async () => {
+      const applicationVersions = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(applicationVersions);
+      if (applicationVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(applicationVersions.message);
+      } else {
         setApplications(applicationVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!applicationVersions && !loadFailed) {
     return (

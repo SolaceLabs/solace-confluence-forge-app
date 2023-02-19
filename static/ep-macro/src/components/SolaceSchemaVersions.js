@@ -51,6 +51,9 @@ console.log('SchemaVersion', props)
   if (schema.referringEvents && schema.referringEvents.length) {
     rows.push({name: 'Referring Event Versions', value: '<i>(' + schema.referringEvents.length + ') found</i>', type: 'String'});
     schema.referringEvents.map(ca => {
+      if (!ca.eventId)
+        return;
+
       rows.push({name: "", type: "Table", value: [
         {name: 'Name:', value: ca.eventName, type: 'String', url: ca.eventUrl},
         (schema.hasOwnProperty('versionName') ?
@@ -70,26 +73,33 @@ console.log('SchemaVersion', props)
 }
 
 export const SolaceSchemaVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [schemaVersions, setSchemasVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [versionKey, setVersionKey] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceSchemaVersions Token', token);
-      (async () => {
-        const schemaVersions = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(schemaVersions);
+    console.log('SolaceSchemaVersions Token', token);
+    (async () => {
+      const schemaVersions = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(schemaVersions);
+      if (schemaVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(schemaVersions.message);
+      } else {
         setSchemasVersions(schemaVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!schemaVersions && !loadFailed) {
     return (

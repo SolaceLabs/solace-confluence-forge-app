@@ -52,24 +52,31 @@ const EventApi = (props) => {
 }
 
 export const SolaceEventApis = (props) => {
-  const { command, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [eventApis, setEventApis] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      console.log('SolaceEventApis Token', token);
-      (async () => {
-        const eventApis = await invoke('get-ep-resource', {command, token: token.value});
-        console.log(eventApis);
+    console.log('SolaceEventApis Token', token);
+    (async () => {
+      const eventApis = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(eventApis);
+      if (eventApis.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(eventApis.message);
+      } else {
         setEventApis(eventApis);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!eventApis && !loadFailed) {
     return (

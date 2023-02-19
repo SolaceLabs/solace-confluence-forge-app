@@ -52,6 +52,9 @@ const EventApiProductVersion = (props) => {
   if (eventApiProduct.eventApis && eventApiProduct.eventApis.length) {
     rows.push({name: 'Referred Event APIs', value: '<i>(' + eventApiProduct.eventApis.length + ') found</i>', type: 'String'});
     eventApiProduct.eventApis.map(ca => {
+      if (!ca.eventApiId)
+        return;
+
       const caRows = [];
       caRows.push({name: 'Name', value: ca.eventApiName, type: 'String', url: ca.eventApiUrl});      
       caRows.push({name: 'Version', value: ca.version, type: 'String', url: ca.versionUrl});
@@ -90,22 +93,29 @@ const EventApiProductVersion = (props) => {
 }
 
 export const SolaceEventApiProductVersions = (props) => {
-  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible} = props;
+  const { command, homeUrl, token, paginate, navigate, page, setIsBlanketVisible, setFetchError} = props;
   const [eventApiProductVersions, setEventApiProductVersions] = useState(null);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    try {
-      (async () => {
-        const eventApiProductVersions = await invoke('get-ep-resource', {command, token: token.value});
+    (async () => {
+      const eventApiProductVersions = await invoke('get-ep-resource', {command, token: token.value});
+      if (eventApiProductVersions.status === false) {
+        setLoadFailed(true);
+        setIsBlanketVisible(false);
+        setError(eventApiProductVersions.message);
+      } else {
         setEventApiProductVersions(eventApiProductVersions);
         setIsBlanketVisible(false);
-      })();
-    } catch (err) {
-      setLoadFailed(true);
-      setIsBlanketVisible(false);
-    }
+      }
+    })();
   }, [ page ]);
+
+  if (error) {
+    setFetchError(error);
+    return <div/>;
+  }
 
   if (!eventApiProductVersions && !loadFailed) {
     return (
