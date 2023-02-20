@@ -59,7 +59,7 @@ const EnumVersion = (props) => {
     });
   }
 
-  if (ennum.referringEvents && ennum.referringEvents.length) {
+  if (ennum.referencedByEventVersionIds && ennum.referencedByEventVersionIds.length) {
     rows.push({name: 'Referring Event Versions', value: '<i>(' + ennum.referringEvents.length + ') found</i>', type: 'String'});
     ennum.referringEvents.map(ca => {
       if (!ca.eventId)

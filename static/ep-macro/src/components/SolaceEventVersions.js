@@ -53,10 +53,10 @@ const EventVersion = (props) => {
     });
   }
 
-  if (event.producerApplications && event.producerApplications.length) {
+  if (event.declaredProducingApplicationVersionIds && event.declaredProducingApplicationVersionIds.length) {
     rows.push({name: 'Declared Producer Applications', value: '<i>(' + event.producerApplications.length + ') found</i>', type: 'String'});
     event.producerApplications.map(ca => {
-      if (ca.applicationId)
+      if (!ca.applicationId)
         return;
 
       rows.push({name: "", type: "Table", value: [
@@ -68,10 +68,10 @@ const EventVersion = (props) => {
     })
   }
 
-  if (event.consumerApplications && event.consumerApplications.length) {
+  if (event.declaredConsumingApplicationVersionIds && event.declaredConsumingApplicationVersionIds.length) {
     rows.push({name: 'Declared Consumer Applications', value: '<i>(' + event.consumerApplications.length + ') found</i>', type: 'String'});
     event.consumerApplications.map(ca => {
-      if (ca.applicationId)
+      if (!ca.applicationId)
         return;
 
       rows.push({name: "", type: "Table", value: [
@@ -83,29 +83,36 @@ const EventVersion = (props) => {
     })
   }
 
-  if (event.consumers && event.consumers.length) {
-    rows.push({name: 'Consumers', value: '<i>(' + event.consumers.length + ') found</i>', type: 'String'});
-    event.consumers.map(ca => {
-      const caRows = [];
-      caRows.push({name: 'Name', value: ca.name, type: 'String'});
-      caRows.push({name: 'Broker Type', value: ca.brokerType, type: 'String'});
-      caRows.push({name: 'Consumer Type', value: ca.consumerType, type: 'String'});
-      caRows.push({name: 'Type', value: ca.type, type: 'String'});
-    
-      if (ca.subscriptions && ca.subscriptions.length) {
-        caRows.push({name: 'Subscriptions:', value: '', type: 'String'});
-        ca.subscriptions.map((caa, index) => {
-          caRows.push({name: '[' + index + ']', value: caa.value + ' (' + caa.subscriptionType + ')', type: 'String'});
-        });
-      }
-      caRows.push({name: 'Created Time', value: new Date(ca.createdTime).toLocaleString(), type: 'String'});
-      caRows.push({name: 'Updated Time', value: new Date(ca.updatedTime).toLocaleString(), type: 'String'});
-      rows.push({name: '', value: caRows, type: 'Table'});
+  if (event.producingEventApiVersionIds && event.producingEventApiVersionIds.length) {
+    rows.push({name: 'Publishing Event Apis', value: '<i>(' + event.producingEventApiVersionIds.length + ') found</i>', type: 'String'});
+    event.producerEventApis.map(ca => {
+      if (!ca.eventApiId)
+        return;
+
+      rows.push({name: "", type: "Table", value: [
+        {name: 'Name:', value: ca.eventApiName, type: 'String', url: ca.eventApiUrl},
+        (ca.hasOwnProperty('versionName') ?
+          {name: 'Version:', value: ca.version + " [" + ca.versionName + "]", type: 'String', url: ca.versionUrl} :
+          {name: 'Version:', value: ca.version, type: 'String', url: ca.versionUrl})
+      ]});
     })
-    if (event.hasOwnProperty('createdTime')) rows.push({name: 'Created Time', value: new Date(event.createdTime).toLocaleString(), type: 'String'});
-    if (event.hasOwnProperty('updatedTime')) rows.push({name: 'Updated Time', value: new Date(event.updatedTime).toLocaleString(), type: 'String'});
   }
 
+  if (event.consumingEventApiVersionIds && event.consumingEventApiVersionIds.length) {
+    rows.push({name: 'Consuming Event Apis', value: '<i>(' + event.consumingEventApiVersionIds.length + ') found</i>', type: 'String'});
+    event.consumingEventApis.map(ca => {
+      if (!ca.eventApiId)
+        return;
+
+      rows.push({name: "", type: "Table", value: [
+        {name: 'Name:', value: ca.eventApiName, type: 'String', url: ca.eventApiUrl},
+        (ca.hasOwnProperty('versionName') ?
+          {name: 'Version:', value: ca.version + " [" + ca.versionName + "]", type: 'String', url: ca.versionUrl} :
+          {name: 'Version:', value: ca.version, type: 'String', url: ca.versionUrl})
+      ]});
+    })
+  }
+  
   return (
     <ResourceTile 
       name={{name: 'Event Version', value: event.name, url: event.url}} 

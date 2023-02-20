@@ -726,6 +726,51 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
     results.data[i].appVersions = appVersions;
   }
 
+  let allEventApiVersions = {};
+  let allEventApis = {};
+
+  for (let i=0; i<results.data.length; i++) {
+    let eventApiVersions = {};
+    let eventApis = {};
+    
+    for (let j=0; j<results.data[i].producingEventApiVersionIds.length; j++) {
+      if (!allEventApis[results.data[i].producingEventApiVersionIds[j]]) {
+        if (!allEventApiVersions[results.data[i].producingEventApiVersionIds[j]]) {
+          response = await getEventApiVersionByID(solaceCloudToken, results.data[i].producingEventApiVersionIds[j]);;
+          allEventApiVersions[results.data[i].producingEventApiVersionIds[j]] = response.data;
+        }
+        if (!allEventApis[results.data[i].producingEventApiVersionIds[j]]) {
+          response = await getEventApiByID(solaceCloudToken, allEventApiVersions[results.data[i].producingEventApiVersionIds[j]].eventApiId);
+          allEventApis[results.data[i].producingEventApiVersionIds[j]] = response.data;
+        }
+      }
+
+      if (!eventApiVersions[results.data[i].producingEventApiVersionIds[j]])
+        eventApiVersions[results.data[i].producingEventApiVersionIds[j]] = allEventApiVersions[results.data[i].producingEventApiVersionIds[j]]
+      if (!eventApis[results.data[i].producingEventApiVersionIds[j]])
+        eventApis[results.data[i].producingEventApiVersionIds[j]] = allEventApis[results.data[i].producingEventApiVersionIds[j]]
+    }
+    for (let j=0; j<results.data[i].consumingEventApiVersionIds.length; j++) {
+      if (!allEventApis[results.data[i].consumingEventApiVersionIds[j]]) {
+        if (!allEventApiVersions[results.data[i].consumingEventApiVersionIds[j]]) {
+          response = await getEventApiVersionByID(solaceCloudToken, results.data[i].consumingEventApiVersionIds[j]);
+          allEventApiVersions[results.data[i].consumingEventApiVersionIds[j]] = response.data;
+        }
+        if (!allEventApis[results.data[i].consumingEventApiVersionIds[j]]) {
+          response = await getEventApiByID(solaceCloudToken, allEventApiVersions[results.data[i].consumingEventApiVersionIds[j]].eventApiId);
+          allEventApis[results.data[i].consumingEventApiVersionIds[j]] = response.data;
+        }
+      }
+      if (!eventApiVersions[results.data[i].consumingEventApiVersionIds[j]])
+        eventApiVersions[results.data[i].consumingEventApiVersionIds[j]] = allEventApiVersions[results.data[i].consumingEventApiVersionIds[j]]
+      if (!eventApis[results.data[i].consumingEventApiVersionIds[j]])
+        eventApis[results.data[i].consumingEventApiVersionIds[j]] = allEventApis[results.data[i].consumingEventApiVersionIds[j]]
+    }
+
+    results.data[i].eventApis = eventApis;
+    results.data[i].eventApiVersions = eventApiVersions;
+  }
+
   return results;
 }
 
@@ -1132,7 +1177,6 @@ console.log(eventApiProductId, solaceCloudToken, options);
     results.data[i].eventApiProductId = eventApiProduct.id;
     results.data[i].eventApiProductName = eventApiProduct.name;
   }
-  console.log('getSolaceEventApiProductVersions RESULTS', results);
 
   let allEventApiVersions = {};
   let allEventApis = {};

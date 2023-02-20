@@ -49,8 +49,8 @@ const EventApiProductVersion = (props) => {
     });
   }
 
-  if (eventApiProduct.eventApis && eventApiProduct.eventApis.length) {
-    rows.push({name: 'Referred Event APIs', value: '<i>(' + eventApiProduct.eventApis.length + ') found</i>', type: 'String'});
+  if (eventApiProduct.eventApiVersionIds && eventApiProduct.eventApiVersionIds.length) {
+    rows.push({name: 'Referred Event APIs', value: '<i>(' + eventApiProduct.eventApiVersionIds.length + ') found</i>', type: 'String'});
     eventApiProduct.eventApis.map(ca => {
       if (!ca.eventApiId)
         return;

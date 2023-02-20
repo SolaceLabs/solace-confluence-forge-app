@@ -48,7 +48,7 @@ console.log('SchemaVersion', props)
     });
   }
 
-  if (schema.referringEvents && schema.referringEvents.length) {
+  if (schema.referencedByEventVersionIds && schema.referencedByEventVersionIds.length) {
     rows.push({name: 'Referring Event Versions', value: '<i>(' + schema.referringEvents.length + ') found</i>', type: 'String'});
     schema.referringEvents.map(ca => {
       if (!ca.eventId)

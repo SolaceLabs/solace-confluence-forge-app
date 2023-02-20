@@ -111,7 +111,7 @@ console.log('IN SOLACE EVENTAPIPRODUCTS', eventApiProducts?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
-      <TitleContainer>Event Product APIs</TitleContainer>
+      <TitleContainer>Event API Products</TitleContainer>
       <PageLayout>
         <Content>
           <Main>

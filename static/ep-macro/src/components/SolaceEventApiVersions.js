@@ -46,8 +46,8 @@ const EventApiVersion = (props) => {
     });
   }
 
-  if (eventApi.producedEvents && eventApi.producedEvents.length) {
-    rows.push({name: 'Produced Events', value: '<i>(' + eventApi.producedEvents.length + ') found</i>', type: 'String'});
+  if (eventApi.producedEventVersionIds && eventApi.producedEventVersionIds.length) {
+    rows.push({name: 'Produced Events', value: '<i>(' + eventApi.producedEventVersionIds.length + ') found</i>', type: 'String'});
     eventApi.producedEvents.map(ca => {
       if (!ca.eventId)
         return;
@@ -61,8 +61,8 @@ const EventApiVersion = (props) => {
     })
   }
 
-  if (eventApi.consumedEvents && eventApi.consumedEvents.length) {
-    rows.push({name: 'Consumed Events', value: '<i>(' + eventApi.consumedEvents.length + ') found</i>', type: 'String'});
+  if (eventApi.consumedEventVersionIds && eventApi.consumedEventVersionIds.length) {
+    rows.push({name: 'Consumed Events', value: '<i>(' + eventApi.consumedEventVersionIds.length + ') found</i>', type: 'String'});
     eventApi.consumedEvents.map(ca => {
       if (!ca.eventId)
         return;
@@ -76,8 +76,8 @@ const EventApiVersion = (props) => {
     })
   }
 
-  if (eventApi.referringEventApiProducts && eventApi.referringEventApiProducts.length) {
-    rows.push({name: 'Declared Event Api Products', value: '<i>(' + eventApi.referringEventApiProducts.length + ') found</i>', type: 'String'});
+  if (eventApi.declaredEventApiProductVersionIds && eventApi.declaredEventApiProductVersionIds.length) {
+    rows.push({name: 'Declared Event Api Products', value: '<i>(' + eventApi.declaredEventApiProductVersionIds.length + ') found</i>', type: 'String'});
     eventApi.referringEventApiProducts.map(ca => {
       if (!ca.eventApiProductId)
         return;

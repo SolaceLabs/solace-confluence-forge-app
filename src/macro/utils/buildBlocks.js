@@ -332,11 +332,14 @@ export const buildEventVersionBlocks = (results, domain) => {
         });
       }
     }
+    block.declaredProducingApplicationVersionIds = results[i].declaredProducingApplicationVersionIds;
     if (results[i].declaredProducingApplicationVersionIds && results[i].declaredProducingApplicationVersionIds.length) {
       block.producerApplications = [];
       for (let j=0; j<results[i].declaredProducingApplicationVersionIds.length; j++) {
         let application = results[i].apps[results[i].declaredProducingApplicationVersionIds[j]];
         let applicationVersion = results[i].appVersions[results[i].declaredProducingApplicationVersionIds[j]];
+        if (!application || !applicationVersion)
+          continue;
 
         block.producerApplications.push({
           applicationId: application.id,
@@ -350,11 +353,14 @@ export const buildEventVersionBlocks = (results, domain) => {
       }
     }
 
+    block.declaredConsumingApplicationVersionIds = results[i].declaredConsumingApplicationVersionIds;
     if (results[i].declaredConsumingApplicationVersionIds && results[i].declaredConsumingApplicationVersionIds.length) {
       block.consumerApplications = [];
       for (let j=0; j<results[i].declaredConsumingApplicationVersionIds.length; j++) {
         let application = results[i].apps[results[i].declaredConsumingApplicationVersionIds[j]];
         let applicationVersion = results[i].appVersions[results[i].declaredConsumingApplicationVersionIds[j]];
+        if (!application || !applicationVersion)
+          continue;
 
         block.consumerApplications.push({
           applicationId: application.id,
@@ -367,7 +373,48 @@ export const buildEventVersionBlocks = (results, domain) => {
         });
       }
     }
-    
+
+    block.producingEventApiVersionIds = results[i].producingEventApiVersionIds;
+    if (results[i].producingEventApiVersionIds && results[i].producingEventApiVersionIds.length) {
+      block.producerEventApis = [];
+      for (let j=0; j<results[i].producingEventApiVersionIds.length; j++) {
+        let eventApi = results[i].eventApis[results[i].producingEventApiVersionIds[j]];
+        let eventApiVersion = results[i].eventApiVersions[results[i].producingEventApiVersionIds[j]];
+        if (!eventApi || !eventApiVersion)
+          continue;
+
+        block.producerEventApis.push({
+          eventApiId: eventApi.id,
+          eventApiName: eventApi.name,
+          eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
+          versionId: eventApiVersion.id,
+          versionName: (eventApiVersion.displayName ? (eventApiVersion.version + ' [' + eventApiVersion.displayName + ']') : (eventApiVersion.version)),
+          version: eventApiVersion.version,
+          versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
+        });
+      }
+    }
+
+    block.consumingEventApiVersionIds = results[i].consumingEventApiVersionIds;
+    if (results[i].consumingEventApiVersionIds && results[i].consumingEventApiVersionIds.length) {
+      block.consumerEventApis = [];
+      for (let j=0; j<results[i].consumingEventApiVersionIds.length; j++) {
+        let eventApi = results[i].eventApis[results[i].consumingEventApiVersionIds[j]];
+        let eventApiVersion = results[i].eventApiVersions[results[i].consumingEventApiVersionIds[j]];
+        if (!eventApi || !eventApiVersion)
+          continue;
+
+        block.consumerEventApis.push({
+          eventApiId: eventApi.id,
+          eventApiName: eventApi.name,
+          eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
+          versionId: eventApiVersion.id,
+          versionName: (eventApiVersion.displayName ? (eventApiVersion.version + ' [' + eventApiVersion.displayName + ']') : (eventApiVersion.version)),
+          version: eventApiVersion.version,
+          versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
+        });
+      }
+    }
     data.push(block);
   }
 
@@ -376,7 +423,6 @@ export const buildEventVersionBlocks = (results, domain) => {
 
 export const buildSchemaBlocks = (results, domain) => {
   let data = [];
-console.log('Schemas:', results);
   for (let i = 0; i < results.length; i++) {
     let block = {};
 
@@ -471,11 +517,14 @@ export const buildSchemaVersionBlocks = (results, domain) => {
       }
     }
 
+    block.referencedByEventVersionIds = results[i].referencedByEventVersionIds;
     if (results[i].referencedByEventVersionIds && results[i].referencedByEventVersionIds.length) {
       block.referringEvents = [];
       for (let j=0; j<results[i].referencedByEventVersionIds.length; j++) {
         let eventVersion = results[i].eventVersions[results[i].referencedByEventVersionIds[j]];
         let event = results[i].events[eventVersion.id];
+        if (!event || !eventVersion)
+          continue;
 
         block.referringEvents.push({
           eventId: event.id,
@@ -595,11 +644,14 @@ export const buildEnumVersionBlocks = (results, domain) => {
       }
     }
 
+    block.referencedByEventVersionIds = results[i].referencedByEventVersionIds;
     if (results[i].referencedByEventVersionIds && results[i].referencedByEventVersionIds.length) {
       block.referringEvents = [];
       for (let j=0; j<results[i].referencedByEventVersionIds.length; j++) {
         let eventVersion = results[i].eventVersions[results[i].referencedByEventVersionIds[j]];
         let event = results[i].events[eventVersion.id];
+        if (!event || !eventVersion)
+          continue;
 
         block.referringEvents.push({
           eventId: event.id,
@@ -705,11 +757,14 @@ export const buildEventApiVersionBlocks = (results, domain) => {
       }
     }
 
+    block.producedEventVersionIds = results[i].producedEventVersionIds;
     if (results[i].producedEventVersionIds && results[i].producedEventVersionIds.length) {
       block.producedEvents = [];
       for (let j=0; j<results[i].producedEventVersionIds.length; j++) {
         let eventVersion = results[i].eventVersions[results[i].producedEventVersionIds[j]];
         let event = results[i].events[eventVersion.id];
+        if (!event || !eventVersion)
+          continue;
 
         block.producedEvents.push({
           eventId: event.id,
@@ -723,11 +778,14 @@ export const buildEventApiVersionBlocks = (results, domain) => {
       }
     }
 
+    block.consumedEventVersionIds = results[i].consumedEventVersionIds;
     if (results[i].consumedEventVersionIds && results[i].consumedEventVersionIds.length) {
       block.consumedEvents = [];
       for (let j=0; j<results[i].consumedEventVersionIds.length; j++) {
         let eventVersion = results[i].eventVersions[results[i].consumedEventVersionIds[j]];
         let event = results[i].events[eventVersion.id];
+        if (!event || !eventVersion)
+          continue;
 
         block.consumedEvents.push({
           eventId: event.id,
@@ -740,11 +798,15 @@ export const buildEventApiVersionBlocks = (results, domain) => {
         });
       }
     }
+    
+    block.declaredEventApiProductVersionIds = results[i].declaredEventApiProductVersionIds;
     if (results[i].declaredEventApiProductVersionIds && results[i].declaredEventApiProductVersionIds.length) {
       block.referringEventApiProducts = [];
       for (let j=0; j<results[i].declaredEventApiProductVersionIds.length; j++) {
         let eventApiProductVersion = results[i].eventApiProductVersions[results[i].declaredEventApiProductVersionIds[j]];
         let eventApiProduct = results[i].eventApiProducts[eventApiProductVersion.id];
+        if (!eventApiProduct || !eventApiProductVersion)
+          continue;
 
         block.referringEventApiProducts.push({
           eventApiProductId: eventApiProduct.id,
@@ -857,14 +919,14 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
         });
       }
     }
-console.log('RESULTS', results);
+    block.eventApiVersionIds = results[i].eventApiVersionIds;
     if (results[i].eventApiVersionIds && results[i].eventApiVersionIds.length) {
-      console.log('RESULTS results[i].eventApiVersions', results[i].eventApiVersions);
-      console.log('RESULTS results[i].eventApis', results[i].eventApis);
       block.eventApis = [];
       for (let j=0; j<results[i].eventApiVersionIds.length; j++) {
         let eventApiVersion = results[i].eventApiVersions[results[i].eventApiVersionIds[j]];
         let eventApi = results[i].eventApis[eventApiVersion.id];
+        if (!eventApi || !eventApiVersion)
+          continue;
 
         block.eventApis.push({
           eventApiId: eventApi.id,
