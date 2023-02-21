@@ -24,7 +24,7 @@ const invokeEventPortalAPI = async (token, method, endpoint, data = {}) => {
 
     return response.json()
   } catch (error) {
-    console.log('In EP API Error - ', error, ' - ', error.message, ' - ', error.toString());
+    console.log('In EP API Error - ', error, ' - ', error.message, ' - ', error.errorId, ' - ', error.toString());
     return {
       status: false,
       error: error.toString(),

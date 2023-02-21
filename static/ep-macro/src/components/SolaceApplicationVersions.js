@@ -168,7 +168,6 @@ export const SolaceApplicationVersions = (props) => {
   }
 
 console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
-
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <TitleContainer>Application Versions</TitleContainer>
@@ -193,7 +192,7 @@ console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
             getPageButtons(1)}
         </SummaryCount>
         <SummaryActions>
-          {command.url !== homeUrl && 
+          {command.url !== homeUrl && homeUrl.indexOf('selectedVersionId') < 0 &&
             <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>}
         </SummaryActions>
       </SummaryFooter>             

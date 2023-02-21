@@ -162,9 +162,32 @@ function App() {
 
   if (isFetched && solCommand && solCommand.error) {
     return (
-      <MainPreloadContainer>
-        {'Invalid URL: ' + solCommand.error}
-      </MainPreloadContainer>
+      <div>
+        <div>
+          <MainPreloadContainer>
+            <BannerContainer>
+              <Image src={SolaceLogo} style={{height: 36}} alt="Solace Logo"/>
+              <span style={{marginRight: 10, fontSize: 14, fontWeight: 'bold'}}>Solace Event Portal</span>
+            </BannerContainer>
+            <div style={{padding: 5, width: '100% !important'}}>
+              <Lozenge appearance="removed" isBold style={{width: '100% !important'}}>
+                Invalid URL:
+              </Lozenge> 
+              <span>&nbsp;{solCommand.error}</span>
+            </div>
+            <SummaryFooter>
+              <SummaryCount/>
+              <SummaryActions>
+                {solCommand.url && solCommand.url.indexOf('Versions') > 0 &&
+                  <Button appearance="primary" onClick={goBackOrigin}>Back</Button>}
+              </SummaryActions>
+            </SummaryFooter>             
+          </MainPreloadContainer>
+          <EPUrlContainer style={{}}>
+            URL: <a href="#" data-url={baseConfig.url} onClick={openLink} target="_blank">{baseConfig.url}</a>
+          </EPUrlContainer>
+        </div>
+      </div>
     );
   }
 

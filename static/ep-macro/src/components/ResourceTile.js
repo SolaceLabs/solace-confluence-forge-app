@@ -31,14 +31,14 @@ export const ResourceTile = (props) => {
     }else if (row.type === 'Table') {   
       return (
         <div>
-          {row.value.map(v => {
+          {row.value.map((v, index) => {
              return (
               v.url ?
-                <div>
+                <div key={index}>
                   <b>{v.name}</b> {ReactHtmlParser (v.value)}
                   &nbsp;<a href="#" data-url={v.url} onClick={openLink} target="_blank"><ShortcutIcon size="small" label=""/></a> 
                 </div> :
-                <div>
+                <div key={index}>
                   <b>{v.name}</b> {ReactHtmlParser (v.value)}
                 </div>
              );             

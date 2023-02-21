@@ -183,7 +183,7 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
               <Button appearance="primary" onClick={() => setOpenDialog(false)}>Close</Button>
             </div>
           }
-          {!openDialog && command.url !== homeUrl && 
+          {!openDialog && command.url !== homeUrl && homeUrl.indexOf('selectedVersionId') < 0 &&
             <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>
           }
         </SummaryActions>

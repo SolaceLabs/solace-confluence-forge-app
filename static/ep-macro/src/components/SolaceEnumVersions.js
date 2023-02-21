@@ -166,7 +166,7 @@ console.log('IN SOLACE ENUM VERSIONS', ennumVersions?.data);
             getPageButtons(1)}
         </SummaryCount>
         <SummaryActions>
-          {command.url !== homeUrl && 
+          {command.url !== homeUrl && homeUrl.indexOf('selectedVersionId') < 0 &&
             <Button appearance="primary" onClick={() => navigate(homeUrl)}>Back</Button>}
         </SummaryActions>
       </SummaryFooter>             
