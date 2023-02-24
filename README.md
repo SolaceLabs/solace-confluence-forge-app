@@ -6,6 +6,8 @@
 
 The Solace PubSub+ Event Portal integration for Confluence gives you and your teams full visibility into your Event Portal resources right in a Confluence page, where you can access information about your Application Domains, Applications, Events, Schemas, Enumerations, Event Apis and Event Api Products. This integration is an open source project, built and maintained by _Solace-Labs_.
 
+This repository contains one way of using Event Portal in your Software Development Lifecycle, in Confluence. Check out the [Supercharge your Software Development Lifecycle with PubSub+ Event Portal](https://solace.com/blog/software-development-lifecycle-with-event-portal) blog to learn about other ways you can use Event Portal to throughout your SDLC. 
+
 ## Installation Guide
 
 The Solace PubSub+ Event Portal integration for Confluence app <font color='#00ad93'>will</font> be published to Confluence Marketplace, and can be made available on to any Confluence workspace by the administrator. However, the source code is made available as a open-source, on an 'as is' basis for anyone who wants to build or extend the app functionality. 

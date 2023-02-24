@@ -175,7 +175,7 @@ export const buildApplicationVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -193,7 +193,7 @@ export const buildApplicationVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -332,6 +332,7 @@ export const buildEventVersionBlocks = (results, domain) => {
         });
       }
     }
+
     block.declaredProducingApplicationVersionIds = results[i].declaredProducingApplicationVersionIds;
     if (results[i].declaredProducingApplicationVersionIds && results[i].declaredProducingApplicationVersionIds.length) {
       block.producerApplications = [];
@@ -346,7 +347,7 @@ export const buildEventVersionBlocks = (results, domain) => {
           applicationName: application.name,
           applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id,
           versionId: applicationVersion.id,
-          versionName: applicationVersion.name,
+          versionName: applicationVersion.displayName,
           version: applicationVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id + "?selectedVersionId=" + applicationVersion.id,
         });
@@ -367,7 +368,7 @@ export const buildEventVersionBlocks = (results, domain) => {
           applicationName: application.name,
           applicationUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id,
           versionId: applicationVersion.id,
-          versionName: applicationVersion.name,
+          versionName: applicationVersion.displayName,
           version: applicationVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/applications/" + application.id + "?selectedVersionId=" + applicationVersion.id,
         });
@@ -388,7 +389,7 @@ export const buildEventVersionBlocks = (results, domain) => {
           eventApiName: eventApi.name,
           eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
           versionId: eventApiVersion.id,
-          versionName: (eventApiVersion.displayName ? (eventApiVersion.version + ' [' + eventApiVersion.displayName + ']') : (eventApiVersion.version)),
+          versionName: eventApiVersion.displayName,
           version: eventApiVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
         });
@@ -409,7 +410,7 @@ export const buildEventVersionBlocks = (results, domain) => {
           eventApiName: eventApi.name,
           eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
           versionId: eventApiVersion.id,
-          versionName: (eventApiVersion.displayName ? (eventApiVersion.version + ' [' + eventApiVersion.displayName + ']') : (eventApiVersion.version)),
+          versionName: eventApiVersion.displayName,
           version: eventApiVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
         });
@@ -531,7 +532,7 @@ export const buildSchemaVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -603,7 +604,7 @@ export const buildEnumVersionBlocks = (results, domain) => {
     block.displayName = results[i].displayName;
     block.createdTime = results[i].createdTime;
     block.updatedTime = results[i].updatedTime;
-      block.name = (block.displayName ? (block.version + ' [' + block.displayName + ']') : (block.version));
+    block.name = (block.displayName ? (block.version + ' [' + block.displayName + ']') : (block.version));
 
     if (results[i].description) {
       let desc = (results[i].description ? results[i].description.split(/\r?\n/) : []);
@@ -658,7 +659,7 @@ export const buildEnumVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -771,7 +772,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -792,7 +793,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
           eventName: event.name,
           eventUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id,
           versionId: eventVersion.id,
-          versionName: eventVersion.name,
+          versionName: eventVersion.displayName,
           version: eventVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/events/" + event.id + "?selectedVersionId=" + eventVersion.id,
         });
@@ -813,7 +814,7 @@ export const buildEventApiVersionBlocks = (results, domain) => {
           eventApiProductName: eventApiProduct.name,
           eventApiProductUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts/" + eventApiProduct.id,
           versionId: eventApiProductVersion.id,
-          versionName: eventApiProductVersion.name,
+          versionName: eventApiProductVersion.displayName,
           version: eventApiProductVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApiProducts/" + eventApiProduct.id + "?selectedVersionId=" + eventApiProductVersion.id,
         });
@@ -933,7 +934,7 @@ export const buildEventApiProductVersionBlocks = (results, domain) => {
           eventApiName: eventApi.name,
           eventApiUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id,
           versionId: eventApiVersion.id,
-          versionName: eventApiVersion.name,
+          versionName: eventApiVersion.displayName,
           version: eventApiVersion.version,
           versionUrl:  "https://" + domain + "/ep/designer/domains/" + results[i].domainId + "/eventApis/" + eventApi.id + "?selectedVersionId=" + eventApiVersion.id,
         });

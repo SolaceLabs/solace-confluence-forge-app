@@ -32,13 +32,17 @@
     "@atlaskit/theme": "^12.2.5",
     "@emotion/react": "^11.10.5",
     "@forge/bridge": "^2.5.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
     "npm-watch": "^0.11.0",
+    "process": "^0.11.10",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-html-parser": "^2.0.2",
     "react-scripts": "^5.0.1",
     "showdown": "^2.1.0",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "url": "^0.11.0"
   },
   "scripts": {
     "start": "GENERATE_SOURCEMAP=false react-app-rewired start",
@@ -67,15 +71,11 @@
     }
   },
   "devDependencies": {
-    "assert": "^2.0.0",
-    "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
-    "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
     "stream-browserify": "^3.0.0",
-    "stream-http": "^3.2.0",
-    "url": "^0.11.0"
+    "stream-http": "^3.2.0"
   }
 }

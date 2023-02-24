@@ -100,7 +100,7 @@ const EventVersion = (props) => {
 
   if (event.consumingEventApiVersionIds && event.consumingEventApiVersionIds.length) {
     rows.push({name: 'Consuming Event Apis', value: '<i>(' + event.consumingEventApiVersionIds.length + ') found</i>', type: 'String'});
-    event.consumingEventApis.map(ca => {
+    event.consumerEventApis.map(ca => {
       if (!ca.eventApiId)
         return;
 
