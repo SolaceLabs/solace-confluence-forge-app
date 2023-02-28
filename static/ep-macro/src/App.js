@@ -40,6 +40,7 @@ function App() {
   const [solCommand, setSolCommand] = useState(null);
   const [isFetched, setIsFetched] = useState(false);
   const [fetchError, setFetchError] = useState(false);
+  const [noTokenFound, setNoTokenFound] = useState(false);
   const [refresh, setRefresh] = useState(new Date().getMilliseconds());
   const [page, setPage] = useState(1);
   const [isBlanketVisible, setIsBlanketVisible] = useState(false);
@@ -103,8 +104,14 @@ function App() {
 
       console.log('PARSING', 'parse-solace-link', url, pageSize, pageNumber);
       console.log('Solace Command', command);
+
       setIsFetched(true);
       setRefresh(new Date().getMilliseconds());
+      if (!token) {
+        command.error = "Missing or invalid REST API token"
+        setNoTokenFound(true);
+      }
+
       return command;
     } catch(error) {
       const command = { pageSize: (pageSize ? pageSize : 5), pageNumber: (pageNumber ? pageNumber : 1), epDomain: url.hostname, url};
@@ -152,14 +159,6 @@ function App() {
     );
   }
 
-  // if (isFetched && !solCommand) {
-  //   return (
-  //     <MainPreloadContainer>
-  //       Missing or invalid Event Portal URL
-  //     </MainPreloadContainer>
-  //   );
-  // }
-
   if (isFetched && solCommand && solCommand.error) {
     return (
       <div>
@@ -171,7 +170,7 @@ function App() {
             </BannerContainer>
             <div style={{padding: 5, width: '100% !important'}}>
               <Lozenge appearance="removed" isBold style={{width: '100% !important'}}>
-                Invalid URL:
+                {noTokenFound ? `Error:` : `Invalid URL:`}
               </Lozenge> 
               <span>&nbsp;{solCommand.error}</span>
             </div>
