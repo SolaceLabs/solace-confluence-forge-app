@@ -24,9 +24,9 @@ For more information try these resources:
 
 #### Solace Resources
 
-Event Portal App for Confluence - [User Guide](user-guide.md)
+Event Portal App for Confluence - [User Guide](guides/user-guide.md)
 
-Event Portal App for Confluence - [Installation Guide](installation-guide.md)
+Event Portal App for Confluence - [Installation Guide](guides/installation-guide.md)
 
 Event Portal 2.0 [Overview](https://docs.solace.com/Cloud/Event-Portal/event-portal-overview.htm)
 
