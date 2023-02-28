@@ -20,7 +20,6 @@ var showdown = require('showdown');
 
 const SchemaVersion = (props) => {
   const { schema, navigate, openModal, homeUrl } = props;
-console.log('SchemaVersion', props)
   const counts = [];
   const rows = [];
   const converter = new showdown.Converter();
@@ -81,7 +80,6 @@ export const SolaceSchemaVersions = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceSchemaVersions Token', token);
     (async () => {
       const schemaVersions = await invoke('get-ep-resource', {command, token: token.value});
       console.log(schemaVersions);
@@ -133,7 +131,6 @@ export const SolaceSchemaVersions = (props) => {
   }
 
   const openModal = (key) => {
-    console.log('Modal Opened', key);
     setVersionKey(key);
     setOpenDialog(true);
   }
@@ -162,7 +159,6 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
             {!openDialog &&
               <Fragment>
                 {schemaVersions?.data.length && schemaVersions.data.map((schema, index) => {
-                  console.log('Build SchemaVersion', index);
                   return <SchemaVersion navigate={goHome} openModal={openModal} schema={schema} />
                 })}
               </Fragment>}              

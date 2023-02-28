@@ -116,7 +116,6 @@ export const SolaceApplicationVersions = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceApplicationVersions Token', token);
     (async () => {
       const applicationVersions = await invoke('get-ep-resource', {command, token: token.value});
       console.log(applicationVersions);
@@ -168,6 +167,7 @@ export const SolaceApplicationVersions = (props) => {
   }
 
 console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
+
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
       <TitleContainer>Application Versions</TitleContainer>

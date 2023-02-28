@@ -65,7 +65,6 @@ export const ResourceTile = (props) => {
         ]
       })
     } else if (row.type === 'Content') {
-      console.log('CONTENT ROW', row);
       tRows.push({
         key: index,
         cells: [

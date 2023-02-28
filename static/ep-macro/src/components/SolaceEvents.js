@@ -55,7 +55,6 @@ export const SolaceEvents = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEvents Token', token);
     (async () => {
       const events = await invoke('get-ep-resource', {command, token: token.value});
       console.log(events);

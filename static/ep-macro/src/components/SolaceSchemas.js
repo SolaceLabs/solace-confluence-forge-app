@@ -33,7 +33,7 @@ const Schema = (props) => {
   if (schema.hasOwnProperty('eventVersionRefCount')) rows.push({name: 'Referring Event Versions count', value: '' + schema.eventVersionRefCount, type: 'String'});
   if (schema.hasOwnProperty('createdTime')) rows.push({name: 'Created Time', value: new Date(schema.createdTime).toLocaleString(), type: 'String'});
   if (schema.hasOwnProperty('updatedTime')) rows.push({name: 'Updated Time', value: new Date(schema.updatedTime).toLocaleString(), type: 'String'});
-  console.log('REFCOUNT', schema.eventVersionRefCount);
+  
   if (schema.customAttributes && schema.customAttributes.length) {
     rows.push({name: 'Custom Attributes', value: '<i>(' + schema.customAttributes.length + ') found</i>', type: 'String'});
     schema.customAttributes.map(ca => {
@@ -59,7 +59,6 @@ export const SolaceSchemas = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceSchemas Token', token);
     (async () => {
       const schemas = await invoke('get-ep-resource', {command, token: token.value});
       console.log(schemas);

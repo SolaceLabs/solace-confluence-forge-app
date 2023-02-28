@@ -128,7 +128,6 @@ export const SolaceEventVersions = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEventVersions Token', token);
     (async () => {
       const eventVersions = await invoke('get-ep-resource', {command, token: token.value});
       console.log(eventVersions);

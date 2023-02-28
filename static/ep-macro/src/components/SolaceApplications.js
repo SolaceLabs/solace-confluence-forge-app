@@ -55,7 +55,6 @@ export const SolaceApplications = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceApplications Token', token);
     (async () => {
       const applications = await invoke('get-ep-resource', {command, token: token.value});
       console.log(applications);
@@ -106,6 +105,7 @@ export const SolaceApplications = (props) => {
     let vUrl = url.replace('applications', 'applicationVersions');
     navigate(vUrl);
   }
+  
 console.log('IN SOLACE APPLICATIONS', applications?.data);
 
   return (

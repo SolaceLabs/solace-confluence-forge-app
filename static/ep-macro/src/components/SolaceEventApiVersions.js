@@ -108,6 +108,7 @@ export const SolaceEventApiVersions = (props) => {
   useEffect(() => {
     (async () => {
       const eventApiVersions = await invoke('get-ep-resource', {command, token: token.value});
+      console.log(eventApiVersions);
       if (eventApiVersions.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);

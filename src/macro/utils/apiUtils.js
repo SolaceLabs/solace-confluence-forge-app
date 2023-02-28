@@ -11,7 +11,7 @@ export const getCurrentUser = async () => {
     const user = await response.json();
     return user;
   } catch (err) {
-    console.log('API Error', err);
+    console.log(err);
     return null;
   }
 }
@@ -35,7 +35,7 @@ export const registerUserEPToken = async (payload) => {
       console.log('Token registered');
     })
     .catch(err => {
-      console.error(err);
+      console.log(err);
       return null;
     });
 
@@ -64,7 +64,7 @@ export const updateUserEPToken = async (payload) => {
       console.log('Token updated');
     })
     .catch(err => {
-      console.error(err);
+      console.log(err);
       return null;
     });
 
@@ -92,7 +92,7 @@ export const getUserEPToken = async (accountId) => {
       }
     })
     .catch(err => {
-      console.error(err);
+      console.log(err);
     });
 
   return token;
@@ -108,7 +108,7 @@ export const deleteUserEPToken = async (accountId) => {
       console.log('Token deleted');
     })
     .catch(err => {
-      console.error(err);
+      console.log(err);
       return false;
     });
 

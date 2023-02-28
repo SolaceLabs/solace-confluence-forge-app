@@ -89,7 +89,6 @@ export const SolaceEnumVersions = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEnumVersions Token', token);
     (async () => {
       const ennumVersions = await invoke('get-ep-resource', {command, token: token.value});
       console.log(ennumVersions);

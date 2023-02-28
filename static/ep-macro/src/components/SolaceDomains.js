@@ -66,7 +66,6 @@ export const SolaceDomains = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceDomains Token', token);
     (async () => {
       const domains = await invoke('get-ep-resource', {command, token: token.value});
       console.log(domains);

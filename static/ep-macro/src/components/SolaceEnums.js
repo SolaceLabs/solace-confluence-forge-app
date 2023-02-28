@@ -32,7 +32,6 @@ const Enum = (props) => {
   if (ennum.hasOwnProperty('eventVersionRefCount')) rows.push({name: 'Referring Event Versions count', value: '' + ennum.eventVersionRefCount, type: 'String'});
   if (ennum.hasOwnProperty('createdTime')) rows.push({name: 'Created Time', value: new Date(ennum.createdTime).toLocaleString(), type: 'String'});
   if (ennum.hasOwnProperty('updatedTime')) rows.push({name: 'Updated Time', value: new Date(ennum.updatedTime).toLocaleString(), type: 'String'});
-  console.log('REFCOUNT', ennum.eventVersionRefCount);
   if (ennum.customAttributes && ennum.customAttributes.length) {
     rows.push({name: 'Custom Attributes', value: '<i>(' + ennum.customAttributes.length + ') found</i>', type: 'String'});
     ennum.customAttributes.map(ca => {
@@ -58,7 +57,6 @@ export const SolaceEnums = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEnums Token', token);
     (async () => {
       const ennums = await invoke('get-ep-resource', {command, token: token.value});
       console.log(ennums);

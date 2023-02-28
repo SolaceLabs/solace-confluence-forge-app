@@ -32,7 +32,7 @@ const EventApi = (props) => {
   if (eventApi.hasOwnProperty('eventVersionRefCount')) rows.push({name: 'Referring Event Versions count', value: '' + eventApi.eventVersionRefCount, type: 'String'});
   if (eventApi.hasOwnProperty('createdTime')) rows.push({name: 'Created Time', value: new Date(eventApi.createdTime).toLocaleString(), type: 'String'});
   if (eventApi.hasOwnProperty('updatedTime')) rows.push({name: 'Updated Time', value: new Date(eventApi.updatedTime).toLocaleString(), type: 'String'});
-  console.log('REFCOUNT', eventApi.eventVersionRefCount);
+  
   if (eventApi.customAttributes && eventApi.customAttributes.length) {
     rows.push({name: 'Custom Attributes', value: '<i>(' + eventApi.customAttributes.length + ') found</i>', type: 'String'});
     eventApi.customAttributes.map(ca => {
@@ -58,7 +58,6 @@ export const SolaceEventApis = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEventApis Token', token);
     (async () => {
       const eventApis = await invoke('get-ep-resource', {command, token: token.value});
       console.log(eventApis);

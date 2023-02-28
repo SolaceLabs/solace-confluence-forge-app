@@ -27,7 +27,7 @@ const EventApiProduct = (props) => {
   if (eventApiProduct.hasOwnProperty('domainName')) rows.push({name: 'Domain', value: eventApiProduct.domainName, type: 'String', url: eventApiProduct.domainUrl});
   if (eventApiProduct.hasOwnProperty('shared')) rows.push({name: 'Shared', value: eventApiProduct.shared ? 'True' : 'False', type: 'String'});
   if (eventApiProduct.hasOwnProperty('brokerType')) rows.push({name: 'Broker Type', value: eventApiProduct.brokerType, type: 'String'});
-  console.log('REFCOUNT', eventApiProduct.eventVersionRefCount);
+  
   if (eventApiProduct.customAttributes && eventApiProduct.customAttributes.length) {
     rows.push({name: 'Custom Attributes', value: '<i>(' + eventApiProduct.customAttributes.length + ') found</i>', type: 'String'});
     eventApiProduct.customAttributes.map(ca => {
@@ -56,7 +56,6 @@ export const SolaceEventApiProducts = (props) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    console.log('SolaceEventApiProducts Token', token);
     (async () => {
       const eventApiProducts = await invoke('get-ep-resource', {command, token: token.value});
       console.log(eventApiProducts);

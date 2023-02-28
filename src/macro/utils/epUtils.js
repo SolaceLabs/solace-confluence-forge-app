@@ -64,7 +64,6 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
   }
 
   let url = new URL(link.trim().replace(/&amp;/g, '&'));
-  console.log('SOLACE URL', url.pathname);
 
   cmd.epDomain = url.hostname;
   cmd.url = url;
@@ -261,7 +260,6 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
               'eventApis': {required: 'eventApiId', versionName: 'eventApiVersions'},
               'eventApiProducts': {required: 'eventApiProductId', versionName: 'eventApiProductVersions'}
   };
-console.log('Versioned Resource', versionedResources);
 
   if (cmd.versionId && Object.keys(versionedResources).includes(cmd.resource)) {
     const parentResource = cmd.resource;
@@ -304,8 +302,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     status: false,
     message: "Not executed"
   };
-  console.log('In getEventPortalResource', cmd, solaceCloudToken);
-
+  
   if (cmd.resource === 'domains') {
     let options = { id: cmd.domainId, versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
     response = await getSolaceApplicationDomains(cmd.scope, solaceCloudToken.epToken, options)
@@ -466,6 +463,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
 }
 
 export const getSolaceApplicationDomains = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceApplicationDomains`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -485,6 +483,7 @@ export const getSolaceApplicationDomains = async (mode, solaceCloudToken, option
 }
 
 export const getSolaceApplications = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceApplications`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -500,7 +499,7 @@ export const getSolaceApplications = async (mode, solaceCloudToken, options=null
     response = await getApplications(solaceCloudToken, params);
   else if (mode === 'id')
     response = await getApplicationByID(solaceCloudToken, options.id, params);
-  console.log('getSolaceApplications response: ', response);
+  
   results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
 
   let domains = {};
@@ -508,17 +507,17 @@ export const getSolaceApplications = async (mode, solaceCloudToken, options=null
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
   }
 
-  console.log('getSolaceApplications results: ', results);
   return results;
 }
 
 export const getSolaceApplicationVersions = async (applicationId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceApplicationVersions`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -548,6 +547,8 @@ export const getSolaceApplicationVersions = async (applicationId, solaceCloudTok
     results.data[i].applicationId = application.id;
     results.data[i].applicationName = application.name;
   }
+
+  console.log(`Fetching Events`)
 
   let allEvents = {};
   let allEventVersions = {};
@@ -597,6 +598,7 @@ export const getSolaceApplicationVersions = async (applicationId, solaceCloudTok
 }
 
 export const getSolaceEvents = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEvents`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -623,7 +625,7 @@ export const getSolaceEvents = async (mode, solaceCloudToken, options=null) => {
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
@@ -633,6 +635,7 @@ export const getSolaceEvents = async (mode, solaceCloudToken, options=null) => {
 }
 
 export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEventVersions`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -663,6 +666,8 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
     results.data[i].eventName = event.name;
   }
 
+  console.log(`Fetching Schemas`)
+
   let schemas = {};
   let schemaVersions = {};
   for (let i=0; i<results.data.length; i++) {    
@@ -680,6 +685,8 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
     results.data[i].schemaVersion = results.data[i].schemaVersionId ? schemaVersions[results.data[i].schemaVersionId] : undefined;
     results.data[i].schema = results.data[i].schemaVersionId ? schemas[results.data[i].schemaVersionId] : undefined;
   }
+
+  console.log(`Fetching App Versions`)
 
   let allAppVersions = {};
   let allApps = {};
@@ -725,6 +732,8 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
     results.data[i].apps = apps;
     results.data[i].appVersions = appVersions;
   }
+
+  console.log(`Fetching Event API Versions`)
 
   let allEventApiVersions = {};
   let allEventApis = {};
@@ -775,6 +784,7 @@ export const getSolaceEventVersions = async (eventId, solaceCloudToken, options=
 }
 
 export const getSolaceSchemas = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceSchemas`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -798,7 +808,7 @@ export const getSolaceSchemas = async (mode, solaceCloudToken, options=null) => 
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
@@ -808,6 +818,7 @@ export const getSolaceSchemas = async (mode, solaceCloudToken, options=null) => 
 }
 
 export const getSolaceSchemaVersions = async (schemaId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceSchemaVersions`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -838,6 +849,8 @@ export const getSolaceSchemaVersions = async (schemaId, solaceCloudToken, option
     results.data[i].schemaId = schema.id;
     results.data[i].schemaName = schema.name;
   }
+
+  console.log(`Fetching Event Versions`)
 
   let allEventVersions = {};
   let allEvents = {};
@@ -875,6 +888,7 @@ export const getSolaceSchemaVersions = async (schemaId, solaceCloudToken, option
 }
 
 export const getSolaceEnums = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEnums`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -898,7 +912,7 @@ export const getSolaceEnums = async (mode, solaceCloudToken, options=null) => {
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
@@ -908,6 +922,7 @@ export const getSolaceEnums = async (mode, solaceCloudToken, options=null) => {
 }
 
 export const getSolaceEnumVersions = async (enumId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEnumVersions`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -938,6 +953,8 @@ export const getSolaceEnumVersions = async (enumId, solaceCloudToken, options=nu
     results.data[i].enumName = ennum.name;
   }
 
+  console.log(`Fetching Event Versions`)
+  
   let allEventVersions = {};
   let allEvents = {};
 
@@ -974,6 +991,7 @@ export const getSolaceEnumVersions = async (enumId, solaceCloudToken, options=nu
 }
 
 export const getSolaceEventApis = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEventApis`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -996,7 +1014,7 @@ export const getSolaceEventApis = async (mode, solaceCloudToken, options=null) =
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
@@ -1006,6 +1024,7 @@ export const getSolaceEventApis = async (mode, solaceCloudToken, options=null) =
 }
 
 export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEventApiVersions`)
   let results = [];
   let params = new URLSearchParams();
 
@@ -1036,6 +1055,8 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
     results.data[i].eventApiName = eventApi.name;
   }
 
+  console.log(`Fetching Event Versions & Event API Product Versions`)
+
   let allEventVersions = {};
   let allEvents = {};
   let allEventApiProducts = {};
@@ -1048,7 +1069,7 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
     let events = {};
     let eventApiProducts = {};
     let eventApiProductVersions = {};
-    
+
     if (results.data[i].producedEventVersionIds) {
       for (let j=0; j<results.data[i].producedEventVersionIds.length; j++) {
         if (!allEvents[results.data[i].producedEventVersionIds[j]]) {
@@ -1106,7 +1127,6 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
       }
     }
 
-    
     results.data[i].eventApiProducts = eventApiProducts;
     results.data[i].eventApiProductVersions = eventApiProductVersions;
   }
@@ -1116,9 +1136,9 @@ export const getSolaceEventApiVersions = async (eventApiId, solaceCloudToken, op
 }
 
 export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEventApiProducts`)
   let results = [];
   let params = new URLSearchParams();
-  console.log(mode, solaceCloudToken, options);
 
   if (mode === 'name') params.append('name', options.name);
   if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
@@ -1139,7 +1159,7 @@ export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=
     results.data[i].domainId = results.data[i].applicationDomainId;
     if (!domains[results.data[i].applicationDomainId]) {
       const domainName = await getApplicationDomainName(solaceCloudToken, results.data[i].applicationDomainId);
-      if (!domainName)
+      if (domainName)
         domains[results.data[i].applicationDomainId] = domainName;
     }
     results.data[i].domainName = domains[results.data[i].applicationDomainId];
@@ -1149,9 +1169,10 @@ export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=
 }
 
 export const getSolaceEventApiProductVersions = async (eventApiProductId, solaceCloudToken, options=null) => {
+  console.log(`Executing getSolaceEventApiProductVersions`)
   let results = [];
   let params = new URLSearchParams();
-console.log(eventApiProductId, solaceCloudToken, options);
+
   params.append('eventApiProductIds', eventApiProductId);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
   if (options.hasOwnProperty('pageNumber')) params.append('pageNumber', options.pageNumber);
@@ -1161,7 +1182,9 @@ console.log(eventApiProductId, solaceCloudToken, options);
     response = await getEventApiProductVersionByID(solaceCloudToken, options.versionId, params);
   else
     response = await getEventApiProductVersions(solaceCloudToken, params);
+
   results = {data: results.concat(response.data), meta: response.meta, status: response.status, error: response.error};
+
   let domain = undefined;
   let eventApiProduct = undefined;
   if (results.data.length > 0) {
@@ -1177,6 +1200,8 @@ console.log(eventApiProductId, solaceCloudToken, options);
     results.data[i].eventApiProductId = eventApiProduct.id;
     results.data[i].eventApiProductName = eventApiProduct.name;
   }
+
+  console.log(`Fetching Event API Versions`)
 
   let allEventApiVersions = {};
   let allEventApis = {};
@@ -1210,12 +1235,12 @@ console.log(eventApiProductId, solaceCloudToken, options);
       let productPlans = [];
       for (let j=0; j<results.data[i].plans.length; j++) {
         productPlans.push({
-          name: results.data[i].plans[i].name,
-          deliveryMode: results.data[i].plans[i]. solaceClassOfServicePolicy.deliveryMode,
-          accessType: results.data[i].plans[i]. solaceClassOfServicePolicy.accessType,
-          maximumTimeToLive: results.data[i].plans[i]. solaceClassOfServicePolicy.maximumTimeToLive,
-          queueType: results.data[i].plans[i]. solaceClassOfServicePolicy.queueType,
-          maxMsgSpoolUsage: results.data[i].plans[i]. solaceClassOfServicePolicy.maxMsgSpoolUsage,
+          name: results.data[i].plans[j].name,
+          deliveryMode: results.data[i].plans[j]. solaceClassOfServicePolicy.deliveryMode,
+          accessType: results.data[i].plans[j]. solaceClassOfServicePolicy.accessType,
+          maximumTimeToLive: results.data[i].plans[j]. solaceClassOfServicePolicy.maximumTimeToLive,
+          queueType: results.data[i].plans[j]. solaceClassOfServicePolicy.queueType,
+          maxMsgSpoolUsage: results.data[i].plans[j]. solaceClassOfServicePolicy.maxMsgSpoolUsage,
         })
       }
     }

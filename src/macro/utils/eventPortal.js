@@ -52,7 +52,6 @@ export const getApplicationDomains = async (token, params=null) => {
     let endpoint = `applicationDomains`
     endpoint = endpoint + (params ? `?${params}` : '');
     const response = await invokeEventPortalAPI(token, 'GET', endpoint, null)
-    console.log('getApplicationDomains RESPONSE', response)
     return response;
   } catch (error) {
     throw new Error(error)
@@ -497,7 +496,6 @@ export const getEventApiProducts = async (token, params=null) => {
     let endpoint = `eventApiProducts`
     endpoint = endpoint + (params ? `?${params}` : '');
     const response = await invokeEventPortalAPI(token, 'GET', endpoint, null)
-    console.log('getEventApiProducts RESPONSE', response);
     return response;
   } catch (error) {
     throw new Error(error)
@@ -550,7 +548,6 @@ export const getEventApiProductVersions = async (token, params=null) => {
     let endpoint = `eventApiProductVersions`;
     endpoint = endpoint + (params ? `?${params}` : '');
     const response = await invokeEventPortalAPI(token, 'GET', endpoint, null)
-    console.log('getEventApiProductVersions RESPONSE', response);
     return response;
   } catch (error) {
     throw new Error(error)
