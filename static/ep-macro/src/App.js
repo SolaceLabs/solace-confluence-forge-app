@@ -67,6 +67,7 @@ function App() {
       const token = await invoke('get-token', accountId);
       console.log('Current Token', token);
       setToken(token);
+      return token;
     } catch(error) {
       console.log('Get EP Token failed');
     }
@@ -87,14 +88,14 @@ function App() {
 
   const initializeSolaceApp = async () => {
     const user = await getUser();
-    await getToken(user?.accountId);
+    const _token = await getToken(user?.accountId);
     const config = await getConfig();
-    const command = await parseUrl(config?.url, 5, page);
+    const command = await parseUrl(_token, config?.url, 5, page);
     setSolCommand(command);
     console.log('COMMAND', command);
   }
 
-  const parseUrl = async(url, pageSize, pageNumber) => {
+  const parseUrl = async(tkn, url, pageSize, pageNumber) => {
     try {
       const command = await invoke('parse-solace-link', {url, pageSize, pageNumber});
       if (!url) {
@@ -107,7 +108,7 @@ function App() {
 
       setIsFetched(true);
       setRefresh(new Date().getMilliseconds());
-      if (!token) {
+      if (!tkn) {
         command.error = "Missing or invalid REST API token"
         setNoTokenFound(true);
       }
@@ -124,7 +125,7 @@ function App() {
 
   const navigateTo = async (url) => {
     setConfig({url: url})
-    const command = await parseUrl(url, 5, 1);
+    const command = await parseUrl(token, url, 5, 1);
     setSolCommand(command);
     setRefresh(new Date().getMilliseconds());
   }
@@ -132,7 +133,7 @@ function App() {
   const goBackOrigin = async () => {
     async function initToBack() {
       const url = baseConfig.url;
-      const command = await parseUrl(url, 5, 1);
+      const command = await parseUrl(token, url, 5, 1);
       setSolCommand(command);
       setFetchError(false);
       setIsFetched(true);
@@ -173,6 +174,12 @@ function App() {
                 {noTokenFound ? `Error:` : `Invalid URL:`}
               </Lozenge> 
               <span>&nbsp;{solCommand.error}</span>
+              <br/><br/>
+              {!noTokenFound &&
+                <span>To report this as bug/issue, you can open an issue on
+                  <a href="#" data-url={`https://github.com/SolaceLabs/solace-confluence-forge-app/issues/new?title=A valid Event Portal URL is reported as invalid by the Solace Confluence App`
+                      + `&body=` + baseConfig.url} onClick={openLink} target="_blank"> Github</a> or post it in <a href="#" data-url="https://solace.community" onClick={openLink} target="_blank"> Solace Community</a>
+                </span>}
             </div>
             <SummaryFooter>
               <SummaryCount/>
@@ -231,7 +238,7 @@ function App() {
       return;
 
     setIsBlanketVisible(true);
-    const command = await parseUrl(config?.url, 5, toPage);
+    const command = await parseUrl(token, config?.url, 5, toPage);
     setSolCommand(command);
     setPage(toPage);
   }
