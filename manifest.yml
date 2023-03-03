@@ -54,3 +54,4 @@ permissions:
         - "*"
 app:
   id: ari:cloud:ecosystem::app/c79b6e99-d250-4a54-9901-04a41b84a372
+  name: Solace
