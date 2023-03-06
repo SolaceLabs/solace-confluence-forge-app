@@ -19,19 +19,19 @@ The Solace Event Portal app has two components
 ### Register API Token
 1. Select the **Solace Event Portal Token Manager** app from the *Apps* menu item on the top of the page.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/4.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/4.png"></p>
 
 2. It will open a page requesting permission to grant permission to access Confluence on behalf of a user. Click on **Allow access** button.
-<p align="center"><img width="640" alt="auth" src="installation-imgs/5.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/5.png"></p>
 
 1. You will be presented with a listing of specific permissions that will be granted to the app in Confluence - click on the **Allow** button at the bottom of the page.
-<p align="center"><img width="640" alt="auth" src="installation-imgs/6.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/6.png"></p>
 
 1. Voila, you are done! You will be automatically redirected to API Token Manager page where you can enter your API Token to get started.
-<p align="center"><img width="640" alt="auth" src="installation-imgs/7.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/7.png"></p>
 
 1. Go ahead, and click on the **Register** button. In the popup, enter your API Token and submit. To know more about REST API tokens for using Solace PubSub+ Cloud, refer to [documentation](https://docs.solace.com/Cloud/ght_api_tokens.htm)
-<p align="center"><img width="640" alt="auth" src="installation-imgs/8.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/8.png"></p>
 
 *NOTE:* You can change/update the token anytime by relaunching the *Solace Event Portal Token Manager* app from the Apps list and clicking on the **Update** button.
 
@@ -39,30 +39,30 @@ The Solace Event Portal app has two components
 
 1. Open an existing page in edit mode or create new page, and enter '/' (slash) in the page to bring up the list of macros. Select the *Solace Event Portal* available in the macros list. 
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/9.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/9.png"></p>
 
 2. A tile layout will appear with a series of buttons at the bottom, if the buttons doesn't appear - just click on the tile. Click on the *pencil* icon.
-<p align="center"><img width="640" alt="auth" src="installation-imgs/10.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/10.png"></p>
 
 3. You will see a configuration sidebar opening up on the left with an empty textarea. Paste the Event Portal URL in the text area and click anywhere outside the sidebar.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/11.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/11.png"></p>
 
 4. You will now see the macro at work - it unfurls the URL and fetches the Event Portal resource details captured in the URL.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/12.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/12.png"></p>
 
 *NOTE*: You are still in the page _Edit_, the displayed information is not interactive. It is just a preview! Go ahead and click on publish by clicking on the **Publish** button at the top-right of the page.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/13.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/13.png"></p>
 
 Here is what is presented in the App view - Resource details, Context (Domain, Application as applicable) and a button to access resource versions.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/14.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/14.png"></p>
 
 5. By clicking on the **Fetch Versions** button, you would be able to retrieve and view the resource versions.
 
-<p align="center"><img width="640" alt="auth" src="installation-imgs/15.png"></p>
+<p align="center"><img alt="auth" src="installation-imgs/15.png"></p>
 
 ### API Token permissions
 
