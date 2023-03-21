@@ -45,8 +45,9 @@ const {
 } = require('./buildBlocks');
 
 const isSolaceURL = (url) => {
+  let baseUrl = url.indexOf('?') > 0 ? url.substring(0, url.indexOf('?')) : url;
   const regex = /https:\/\/(.*)\.solace\.cloud\/ep\/designer(($|\/domains$|\/domains\/[a-zA-Z0-9]*$)|(\/domains\/[a-zA-Z0-9]*\/applications$|\/domains\/[a-zA-Z0-9]*\/applications\?|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applicationVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/events$|\/domains\/[a-zA-Z0-9]*\/events\?|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/schemas$|\/domains\/[a-zA-Z0-9]*\/schemas\?|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemaVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/enums$|\/domains\/[a-zA-Z0-9]*\/enums\?|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enumVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApis$|\/domains\/[a-zA-Z0-9]*\/eventApis\?|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApiProducts$|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\?|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProductVersions\/[a-zA-Z0-9]*))/
-  return regex.test(url);
+  return regex.test(baseUrl);
 }
 
 export const parseSolaceLink = (link, pageSize, pageNumber) => {
