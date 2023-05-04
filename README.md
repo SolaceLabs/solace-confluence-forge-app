@@ -51,4 +51,4 @@ See the list of [contributors](https://github.com/solacecommunity/<github-repo>/
 
 ## License
 
-See the [LICENSE](LICENSE) file for details.
+See the [LICENSE](https://github.com/SolaceLabs/solace-confluence-forge-app/blob/main/LICENSE.md) file for details.
