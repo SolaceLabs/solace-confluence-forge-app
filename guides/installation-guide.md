@@ -8,7 +8,6 @@ It should be noted that the access to Event Portal is incumbent upon a valid RES
 
 The Solace Event Portal Confluence app is available on the Atlassian Marketplace. Any one with admin privilege on their Confluence instance can fetch and install with a single-click. 
 
-
 ## Install Solace Event Portal App for Confluence
 Solace Event Portal App for Confluence can be installed on a Confluence workspace by the Confluence Administrator (or a user with appropriate privileges). 
 

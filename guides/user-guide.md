@@ -6,7 +6,6 @@ Confluence app interactions exposes a read-only view of the EP artifacts and uti
 
 It should be noted that the access to Event Portal is incumbent upon a valid REST API Token, a Confluence user must register a valid API Token to access Event Portal app features.  
 
-
 ### About Solace Event Portal App
 
 The Solace Event Portal app has two components
