@@ -9,8 +9,24 @@ It should be noted that the access to Event Portal is incumbent upon a valid RES
 ### About Solace Event Portal App
 
 The Solace Event Portal app has two components
-* REST API Token Manager app to manage API tokens and
+* REST API Token Manager app to manage API tokens
 * Event Portal macro to interact with Event Portal using REST APIs on a page
+
+```
+NOTE: It is a good idea to generate REST API token with READ permission set on all permission sets. However, if you want to grant permission selectively on specific objects, here are the resources that the app would need a READ access.
+Designer
+- Read any Enum
+- Read any Event API
+- Read any Event API Product
+Event Portal
+- Read any Application
+- Read any Application Domain
+- Read any Event
+- Read any Schema
+- Read any Tag
+- Read any Enum
+- Event Portal Read
+```
 
 ### Register API Token
 1. Select the **Solace Event Portal Token Manager** app from the *Apps* menu item on the top of the page.
@@ -20,13 +36,13 @@ The Solace Event Portal app has two components
 2. It will open a page requesting permission to grant permission to access Confluence on behalf of a user. Click on **Allow access** button.
 <p align="center"><img alt="auth" src="installation-imgs/5.png"></p>
 
-1. You will be presented with a listing of specific permissions that will be granted to the app in Confluence - click on the **Allow** button at the bottom of the page.
+3. You will be presented with a listing of specific permissions that will be granted to the app in Confluence - click on the **Allow** button at the bottom of the page.
 <p align="center"><img alt="auth" src="installation-imgs/6.png"></p>
 
-1. Voila, you are done! You will be automatically redirected to API Token Manager page where you can enter your API Token to get started.
+4. Voila, you are done! You will be automatically redirected to API Token Manager page where you can enter your API Token to get started.
 <p align="center"><img alt="auth" src="installation-imgs/7.png"></p>
 
-1. Go ahead, and click on the **Register** button. In the popup, enter your API Token and submit. To know more about REST API tokens for using Solace PubSub+ Cloud, refer to [documentation](https://docs.solace.com/Cloud/ght_api_tokens.htm)
+5. Go ahead, and click on the **Register** button. In the popup, enter your API Token and submit. To know more about REST API tokens for using Solace PubSub+ Cloud, refer to [documentation](https://docs.solace.com/Cloud/ght_api_tokens.htm)
 <p align="center"><img alt="auth" src="installation-imgs/8.png"></p>
 
 *NOTE:* You can change/update the token anytime by relaunching the *Solace Event Portal Token Manager* app from the Apps list and clicking on the **Update** button.
