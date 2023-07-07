@@ -59,7 +59,6 @@ export const SolaceEnums = (props) => {
   useEffect(() => {
     (async () => {
       const ennums = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(ennums);
       if (ennums.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -107,7 +106,7 @@ export const SolaceEnums = (props) => {
     let vUrl = url.replace('enums', 'enumVersions');
     navigate(vUrl);
   }
-console.log('IN SOLACE ENUMS', ennums?.data);
+  // console.log('IN SOLACE ENUMS', ennums?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

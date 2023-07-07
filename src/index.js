@@ -16,22 +16,22 @@ resolver.define('get-user', ({ context }) => {
 });
 
 resolver.define('get-token', ({ context }) => {
-  console.log('get-token', context.accountId);
+  // console.log('get-token', context.accountId);
   return getUserEPToken(context.accountId);
 });
 
 resolver.define('register-token', async ({ payload, context }) => {
-  console.log('register-token', payload);
+  // console.log('register-token', payload);
   return registerUserEPToken(payload);
 });
 
 resolver.define('update-token', async ({ payload, context }) => {
-  console.log('update-token', payload);
+  // console.log('update-token', payload);
   return updateUserEPToken(payload);
 });
 
 resolver.define('delete-token', async ({ context }) => {
-  console.log('delete-token', context.accountId);
+  // console.log('delete-token', context.accountId);
   return deleteUserEPToken(context.accountId);
 });
 
@@ -41,7 +41,7 @@ resolver.define('parse-solace-link', async({payload, context }) => {
 });
 
 resolver.define('get-ep-resource', async({ payload, context }) => {
-  console.log('get-ep-resource');
+  // console.log('get-ep-resource');
   return getEventPortalResource(payload.command, payload.token);
 });
 

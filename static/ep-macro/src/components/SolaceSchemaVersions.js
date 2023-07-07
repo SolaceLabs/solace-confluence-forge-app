@@ -5,6 +5,7 @@ import SectionMessage from '@atlaskit/section-message';
 import Spinner from '@atlaskit/spinner';
 import Pagination from '@atlaskit/pagination';
 import Button from '@atlaskit/button';  
+import copy from 'copy-to-clipboard';
 import {
   Content,
   Main,
@@ -82,7 +83,6 @@ export const SolaceSchemaVersions = (props) => {
   useEffect(() => {
     (async () => {
       const schemaVersions = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(schemaVersions);
       if (schemaVersions.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -137,10 +137,13 @@ export const SolaceSchemaVersions = (props) => {
 
   const getContent = () => {
     let content = schemaVersions?.data.find(s => s.id === versionKey)?.content;
-    return content ? ReactHtmlParser (content.replaceAll('\n', '<br/>').replaceAll(' ', '&nbsp;')) : 'No schema specified';
+    return content ? content : 'No content found';
   }
 
-console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
+  const getCopyContent = () => {
+    let content = schemaVersions?.data.find(s => s.id === versionKey)?.content;
+    return content ? content : 'No content found';
+  }
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
@@ -152,7 +155,14 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
             {openDialog &&
               <Fragment> 
                 <ContentContainer>
-                  <div>{getContent()}</div>
+                  <Fragment>
+                    <style>
+                      {`#p-wrap {
+                        white-space: pre-line;
+                      }`}
+                    </style>
+                    <textarea rows="30" class="schemaText" readonly value={getContent()}></textarea>
+                  </Fragment>
                 </ContentContainer>
               </Fragment> 
             }
@@ -176,6 +186,7 @@ console.log('IN SOLACE SCHEMA VERSIONS', schemaVersions?.data);
         <SummaryActions>
           {openDialog &&
             <div>
+              <Button style={{marginRight: 10}} appearance="primary" onClick={() => {copy(getCopyContent())}}>Copy</Button>
               <Button appearance="primary" onClick={() => setOpenDialog(false)}>Close</Button>
             </div>
           }

@@ -88,7 +88,6 @@ export const ResourceTile = (props) => {
     }
   })
   
-  console.log('ROWS', rows);
   const head = {
     cells: [
       {

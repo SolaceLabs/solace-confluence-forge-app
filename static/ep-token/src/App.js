@@ -75,10 +75,8 @@ function App() {
 
   useEffect(() => {
     const getCurrentUser = async () => {
-      console.log('Get User');
       return await invoke('get-user')
         .then(user => {
-          console.log('Current User', user);
           setCurrentUser(user);
           setCurrentUserAccountId(user.accountId);
           return user;
@@ -92,7 +90,6 @@ function App() {
     const getCurrentToken = async () => {
       return await invoke('get-token')
         .then(token => {
-          console.log('Current Token', token);
           setCurrentUserToken(token);
           setIsFetched(true);
         })
@@ -165,10 +162,8 @@ function App() {
     let newToken = null;
     if (currentUserToken && currentUserToken.id) {
       newToken = await invoke('update-token', payload);
-      console.log('NEW TOKEN', newToken);
     } else {
       newToken = await invoke('register-token', payload);
-      console.log('NEW TOKEN', newToken);
     }
     setIsTokenSubmitting(false)
     setCurrentUserToken(newToken);
@@ -272,7 +267,6 @@ function App() {
           <a href="#" onClick={openDocs}> documentation</a></p>
         <p></p>
       </SectionMessage>
-{console.log('TOKKKEN', currentUserToken)}
 
       <FormContainer style={{padding: 10}}>
         <Fragment>

@@ -118,7 +118,6 @@ export const SolaceApplicationVersions = (props) => {
   useEffect(() => {
     (async () => {
       const applicationVersions = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(applicationVersions);
       if (applicationVersions.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -166,7 +165,7 @@ export const SolaceApplicationVersions = (props) => {
     navigate(homeUrl);
   }
 
-console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
+  // console.log('IN SOLACE APPLICATION VERSIONS', applicationVersions?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

@@ -52,7 +52,7 @@ function App() {
   const getConfig = async () => {
     try {
       const config = await invoke('get-config');
-      console.log('Current Config', config);
+      // console.log('Current Config', config);
       setConfig(config);  
       setBaseConfig(config);
       return config;
@@ -65,7 +65,7 @@ function App() {
   const getToken = async (accountId) => {
     try {
       const token = await invoke('get-token', accountId);
-      console.log('Current Token', token);
+      // console.log('Current Token', token);
       setToken(token);
       return token;
     } catch(error) {
@@ -76,7 +76,7 @@ function App() {
   const getUser = async () => {
     try {
       const user = await invoke('get-user');
-      console.log('Current User', user);
+      // console.log('Current User', user);
       setUser(user);
       setAccountId(user?.accountId);
       return user;
@@ -92,7 +92,7 @@ function App() {
     const config = await getConfig();
     const command = await parseUrl(_token, config?.url, 5, page);
     setSolCommand(command);
-    console.log('COMMAND', command);
+    // console.log('COMMAND', command);
   }
 
   const parseUrl = async(tkn, url, pageSize, pageNumber) => {
@@ -103,7 +103,7 @@ function App() {
         return command;
       }
 
-      console.log('PARSING', 'parse-solace-link', url, pageSize, pageNumber);
+      // console.log('PARSING', 'parse-solace-link', url, pageSize, pageNumber);
       console.log('Solace Command', command);
 
       setIsFetched(true);
@@ -149,7 +149,6 @@ function App() {
     init();
   }, []);
 
-  console.log('isFetched', isFetched, 'solCommand', solCommand);
   if (!isFetched || !solCommand) {
     return (
       <MainPreloadContainer>
@@ -214,7 +213,7 @@ function App() {
                 Error:
               </Lozenge> 
               <span>&nbsp;{errorString}</span>
-              <span> - Review your REST API Token permissions.</span>
+              <span> - Either the resource does not exist, or insufficient privileges on the REST API token.</span>
             </div>
             <SummaryFooter>
               <SummaryCount/>

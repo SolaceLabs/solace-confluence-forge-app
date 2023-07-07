@@ -58,7 +58,6 @@ export const SolaceEventApiProducts = (props) => {
   useEffect(() => {
     (async () => {
       const eventApiProducts = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(eventApiProducts);
       if (eventApiProducts.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -106,7 +105,8 @@ export const SolaceEventApiProducts = (props) => {
     let vUrl = url.replace('eventApiProducts', 'eventApiProductVersions');
     navigate(vUrl);
   }
-console.log('IN SOLACE EVENTAPIPRODUCTS', eventApiProducts?.data);
+  
+  // console.log('IN SOLACE EVENTAPIPRODUCTS', eventApiProducts?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
