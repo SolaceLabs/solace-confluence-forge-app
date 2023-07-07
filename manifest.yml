@@ -27,11 +27,11 @@ resources:
   - key: ep-token
     path: static/ep-token/build
     tunnel:
-      port: 3000
+      port: 3001
   - key: ep-macro
     path: static/ep-macro/build
     tunnel:
-      port: 3001
+      port: 3000
 permissions:
   scopes:
     - read:confluence-user

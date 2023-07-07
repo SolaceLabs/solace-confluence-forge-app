@@ -60,7 +60,6 @@ export const SolaceEventApis = (props) => {
   useEffect(() => {
     (async () => {
       const eventApis = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(eventApis);
       if (eventApis.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -108,7 +107,8 @@ export const SolaceEventApis = (props) => {
     let vUrl = url.replace('eventApis', 'eventApiVersions');
     navigate(vUrl);
   }
-console.log('IN SOLACE EVENTAPIS', eventApis?.data);
+
+  // console.log('IN SOLACE EVENTAPIS', eventApis?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

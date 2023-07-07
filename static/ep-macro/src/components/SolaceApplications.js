@@ -106,7 +106,7 @@ export const SolaceApplications = (props) => {
     navigate(vUrl);
   }
   
-console.log('IN SOLACE APPLICATIONS', applications?.data);
+  // console.log('IN SOLACE APPLICATIONS', applications?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

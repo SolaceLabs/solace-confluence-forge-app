@@ -46,8 +46,11 @@ const {
 
 const isSolaceURL = (url) => {
   let baseUrl = url.indexOf('?') > 0 ? url.substring(0, url.indexOf('?')) : url;
-  const regex = /https:\/\/(.*)\.solace\.cloud\/ep\/designer(($|\/domains$|\/domains\/[a-zA-Z0-9]*$)|(\/domains\/[a-zA-Z0-9]*\/applications$|\/domains\/[a-zA-Z0-9]*\/applications\?|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applicationVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/events$|\/domains\/[a-zA-Z0-9]*\/events\?|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/schemas$|\/domains\/[a-zA-Z0-9]*\/schemas\?|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemaVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/enums$|\/domains\/[a-zA-Z0-9]*\/enums\?|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enumVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApis$|\/domains\/[a-zA-Z0-9]*\/eventApis\?|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApiProducts$|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\?|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProductVersions\/[a-zA-Z0-9]*))/
-  return regex.test(baseUrl);
+  const dRegex = /https:\/\/(.*)\.solace\.cloud\/ep\/designer(($|\/domains$|\/domains\/[a-zA-Z0-9]*$)|(\/domains\/[a-zA-Z0-9]*\/applications$|\/domains\/[a-zA-Z0-9]*\/applications\?|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applications\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/applicationVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/events$|\/domains\/[a-zA-Z0-9]*\/events\?|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/events\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/schemas$|\/domains\/[a-zA-Z0-9]*\/schemas\?|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemas\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/schemaVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/enums$|\/domains\/[a-zA-Z0-9]*\/enums\?|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enums\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/enumVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApis$|\/domains\/[a-zA-Z0-9]*\/eventApis\?|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApis\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiVersions\/[a-zA-Z0-9]*)|(\/domains\/[a-zA-Z0-9]*\/eventApiProducts$|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\?|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProducts\/[a-zA-Z0-9]*|\/domains\/[a-zA-Z0-9]*\/eventApiProductVersions\/[a-zA-Z0-9]*))/
+  const designerUrl = dRegex.test(baseUrl);
+  const cRegex = /https:\/\/(.*)\.solace\.cloud\/ep\/catalog((\/applications|$)|(\/events|$)|(\/schemas|$)|(\/enums|$)|(\/eventApiProducts|$)|(\/eventApi|$)|($)|)/
+  const catalogUrl = cRegex.test(baseUrl);
+  return designerUrl || catalogUrl;
 }
 
 export const parseSolaceLink = (link, pageSize, pageNumber) => {
@@ -67,6 +70,7 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
   let url = new URL(link.trim().replace(/&amp;/g, '&'));
 
   cmd.epDomain = url.hostname;
+  cmd.epCatalogUrl = url.pathname.startsWith('/ep/catalog');
   cmd.url = url;
   if (url.pathname === '/ep/designer') {
     cmd.resource = 'domains';
@@ -74,7 +78,13 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
     return cmd;
   }
   
-  if (!url.pathname.startsWith('/ep/designer/')) {
+  if (url.pathname === '/ep/catalog') {
+    cmd.resource = 'applications';
+    cmd.scope = 'all';
+    return cmd;
+  }
+
+  if (!(url.pathname.startsWith('/ep/designer/') || url.pathname.startsWith('/ep/catalog/'))) {
     cmd.error = 'Invalid Event Portal URL';
     console.log(cmd.error);
     return cmd;
@@ -172,7 +182,7 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
         cmd.resourceId = vals[j+1];
       }
     }
-    if (vals[j] === 'eventApis') {
+    if (vals[j] === 'eventApis' || vals[j] === 'eventApi') {
       cmd.resource = 'eventApis';            
       if (!vals[j+1]) {
         cmd.scope = 'all';
@@ -235,7 +245,7 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
                       'eventApiProducts', 'eventApiProductVersions'];
   for (let i=0; i<resources.length; i++) {
     let res = resources[i];
-    if (url.pathname.indexOf(`/${res}/`) > 0 || url.pathname.indexOf(`/${res}?`) > 0 ||url.pathname.endsWith(`/${res}`)) {
+    if (url.pathname.indexOf(`/${res}/`) > 0 || url.pathname.indexOf(`/${res}?`) > 0 || url.pathname.endsWith(`/${res}`)) {
       if (url.searchParams.has('selectedDomainId')) {
         cmd.scope = 'id';
         cmd.resource = res;
@@ -253,6 +263,12 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
       }
     }
   };
+
+  if (cmd.epCatalogUrl && url.pathname.endsWith(`/eventApi`) && url.searchParams.has('selectedId')) {
+    cmd.scope = 'id';
+    cmd[`eventApiId`] = url.searchParams.get('selectedId');
+  }
+  
   const versionedResources = {
               'applications': {required: 'applicationId', versionName: 'applicationVersions'},
               'events': {required: 'eventId', versionName: 'eventVersions'},
@@ -286,7 +302,7 @@ export const parseSolaceLink = (link, pageSize, pageNumber) => {
     return cmd;
   }
     
-  if (cmd.resource !== 'domains' && !cmd.domainId) {
+  if (cmd.resource !== 'domains' && !cmd.domainId && !cmd.epCatalogUrl) {
     cmd.error = 'Unable to identify Event Portal domain';
     console.log(cmd.error);
     return cmd;
@@ -317,7 +333,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'applications') {
     let options = { id: cmd.applicationId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceApplications(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = response.error ? response.error : "No applications found";
@@ -341,7 +357,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'events') {
     let options = { id: cmd.eventId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceEvents(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = response.error ? response.error : "No events found";
@@ -365,7 +381,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'schemas') {
     let options = { id: cmd.schemaId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceSchemas(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = "No schemas found";
@@ -389,7 +405,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'enums') {
     let options = { id: cmd.enumId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceEnums(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = response.error ? response.error : "No enums found";
@@ -413,7 +429,7 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'eventApis') {
     let options = { id: cmd.eventApiId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceEventApis(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = response.error ? response.error : "No EventApis found";
@@ -437,13 +453,13 @@ export const getEventPortalResource = async (cmd, solaceCloudToken) => {
     }
   } else if (cmd.resource === 'eventApiProducts') {
     let options = { id: cmd.eventApiProductId, domainId: cmd.domainId, domainName: cmd.domainName, 
-                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber}
+                    versionId: cmd.versionId, pageSize: (cmd.pageSize ? cmd.pageSize : 5), pageNumber: cmd.pageNumber, epCatalogUrl: cmd.epCatalogUrl}
     response = await getSolaceEventApiProducts(cmd.scope, solaceCloudToken.epToken, options)
     if (!response.data.length) {
       resource.message = response.error ? response.error : "No Event API Products found";
     } else {
       resource.status = true;
-      resource.message = response.data.length + " EventApis found";
+      resource.message = response.data.length + " Event API Products found";
       resource.meta = response.meta;
       resource.data = await buildEventApiProductBlocks(response.data, cmd.epDomain); 
     }
@@ -489,7 +505,7 @@ export const getSolaceApplications = async (mode, solaceCloudToken, options=null
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', encodeURIComponent(options.name));
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('type')) params.append('applicationType', options.type);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
@@ -604,7 +620,7 @@ export const getSolaceEvents = async (mode, solaceCloudToken, options=null) => {
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', options.name);
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('shared')) params.append('shared', options.shared);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
@@ -790,7 +806,7 @@ export const getSolaceSchemas = async (mode, solaceCloudToken, options=null) => 
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', options.name);
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('shared')) params.append('shared', options.shared);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
@@ -894,7 +910,7 @@ export const getSolaceEnums = async (mode, solaceCloudToken, options=null) => {
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', options.name);
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('shared')) params.append('shared', options.shared);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
@@ -997,7 +1013,7 @@ export const getSolaceEventApis = async (mode, solaceCloudToken, options=null) =
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', options.name);
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('shared')) params.append('shared', options.shared);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);
@@ -1142,7 +1158,7 @@ export const getSolaceEventApiProducts = async (mode, solaceCloudToken, options=
   let params = new URLSearchParams();
 
   if (mode === 'name') params.append('name', options.name);
-  if (options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
+  if (!options.epCatalogUrl && options.hasOwnProperty('domainId')) params.append('applicationDomainId', options.domainId);
   if (options.hasOwnProperty('shared')) params.append('shared', options.shared);
   if (options.hasOwnProperty('sort')) params.append('sort', 'name:'+options.sort);
   if (options.hasOwnProperty('pageSize')) params.append('pageSize', options.pageSize);

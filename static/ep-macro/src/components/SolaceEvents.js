@@ -57,7 +57,6 @@ export const SolaceEvents = (props) => {
   useEffect(() => {
     (async () => {
       const events = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(events);
       if (events.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -105,7 +104,8 @@ export const SolaceEvents = (props) => {
     let vUrl = url.replace('events', 'eventVersions');
     navigate(vUrl);
   }
-console.log('IN SOLACE EVENTS', events?.data);
+
+  // console.log('IN SOLACE EVENTS', events?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

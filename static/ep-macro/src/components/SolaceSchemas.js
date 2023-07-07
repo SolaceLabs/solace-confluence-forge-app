@@ -61,7 +61,6 @@ export const SolaceSchemas = (props) => {
   useEffect(() => {
     (async () => {
       const schemas = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(schemas);
       if (schemas.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -109,7 +108,8 @@ export const SolaceSchemas = (props) => {
     let vUrl = url.replace('schemas', 'schemaVersions');
     navigate(vUrl);
   }
-console.log('IN SOLACE SCHEMAS', schemas?.data);
+
+  // console.log('IN SOLACE SCHEMAS', schemas?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

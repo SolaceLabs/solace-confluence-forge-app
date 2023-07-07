@@ -68,7 +68,6 @@ export const SolaceDomains = (props) => {
   useEffect(() => {
     (async () => {
       const domains = await invoke('get-ep-resource', {command, token: token.value});
-      console.log(domains);
       if (domains.status === false) {
         setLoadFailed(true);
         setIsBlanketVisible(false);
@@ -111,7 +110,8 @@ export const SolaceDomains = (props) => {
     
     return <Pagination testId="page" pages={arr} selectedIndex={page-1} onChange={paginate} />
   }
-console.log('IN SOLACE DOMAINS', domains?.data);
+
+  // console.log('IN SOLACE DOMAINS', domains?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>

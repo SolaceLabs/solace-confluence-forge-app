@@ -28,6 +28,7 @@
     "@forge/resolver": "^1.4.8",
     "@forge/ui": "^1.6.0",
     "@solace-community/eventportal": "^1.4.0",
+    "copy-to-clipboard": "^3.3.3",
     "react": "^16.14.0",
     "react-html-parser": "^2.0.2"
   },

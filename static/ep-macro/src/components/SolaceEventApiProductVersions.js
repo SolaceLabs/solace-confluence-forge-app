@@ -148,7 +148,7 @@ export const SolaceEventApiProductVersions = (props) => {
     navigate(homeUrl);
   }
 
-console.log('IN SOLACE EVENTAPIPRODUCT VERSIONS', eventApiProductVersions?.data);
+  // console.log('IN SOLACE EVENTAPIPRODUCT VERSIONS', eventApiProductVersions?.data);
 
   return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
